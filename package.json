@@ -1,0 +1,74 @@
+{
+  "name": "time-voyager",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "TimeVoyager — 时光旅行者，专注即探索，时间换世界",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "electron:build": "vite build && electron-builder"
+  },
+  "dependencies": {
+    "vue": "^3.5.30",
+    "vuetify": "^4.0.3",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.5",
+    "concurrently": "^9.1.2",
+    "electron": "^41.0.3",
+    "electron-builder": "^26.8.1",
+    "vite": "^8.0.1",
+    "vite-plugin-pwa": "^1.2.0",
+    "wait-on": "^8.0.3"
+  },
+  "build": {
+    "appId": "com.timevoyager.app",
+    "productName": "TimeVoyager — 时光旅行者",
+    "directories": {
+      "output": "release",
+      "buildResources": "public"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "extraMetadata": {
+      "main": "electron/main.js"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "public/icons.svg"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "TimeVoyager"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "public/icons.svg",
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "icon": "public/icons.svg"
+    }
+  }
+}
