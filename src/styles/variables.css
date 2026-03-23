@@ -1,0 +1,211 @@
+/* TimeVoyager - 全局 CSS 变量 v2.0 */
+/* 按照界面 UI 设计规范更新 */
+
+:root {
+  /* ====================
+     配色规范
+     ==================== */
+  /* 背景色 */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F5F5F5;
+  --bg-card: #FFFFFF;
+  --bg-elevated: #FAFAFA;
+
+  /* 主色 - 靛蓝 */
+  --primary: #6366F1;
+  --primary-light: #818CF8;
+  --primary-dark: #4F46E5;
+
+  /* 强调色 - 琥珀 */
+  --accent: #F59E0B;
+  --accent-light: #FBBF24;
+  --accent-dark: #D97706;
+
+  /* 功能色 */
+  --success: #10B981;
+  --success-light: #34D399;
+  --danger: #EF4444;
+  --danger-light: #F87171;
+  --warning: #F59E0B;
+  --info: #3B82F6;
+
+  /* 文字色 */
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  --text-light: #9CA3AF;
+  --text-inverse: #FFFFFF;
+
+  /* 边框色 */
+  --border: #E5E7EB;
+  --border-light: #F3F4F6;
+
+  /* ====================
+     圆角规范
+     ==================== */
+  --radius-sm: 8px;    /* 小按钮/标签 */
+  --radius: 12px;      /* 卡片容器（统一） */
+  --radius-lg: 16px;   /* 大卡片/弹窗 */
+  --radius-xl: 24px;   /* 超大圆角 */
+  --radius-full: 9999px; /* 圆形 */
+
+  /* ====================
+     间距规范
+     ==================== */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;   /* 页面边距 */
+  --spacing-lg: 24px;   /* 模块间距 */
+  --spacing-xl: 32px;
+
+  /* ====================
+     字体规范
+     ==================== */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  
+  --font-size-xs: 12px;    /* 微小字 - 标签/注释 */
+  --font-size-sm: 14px;    /* 小字 - 提示/辅助文本 */
+  --font-size-base: 16px;  /* 正文 */
+  --font-size-lg: 18px;    /* 标题 3 */
+  --font-size-xl: 20px;    /* 标题 2 */
+  --font-size-2xl: 24px;   /* 标题 1 */
+  --font-size-3xl: 32px;   /* 大数字 */
+  --font-size-4xl: 48px;   /* 超大数字 */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* ====================
+     阴影规范
+     ==================== */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* ====================
+     按钮规范
+     ==================== */
+  --btn-height-lg: 44px;   /* 大号按钮 */
+  --btn-height-md: 36px;   /* 中号按钮 */
+  --btn-height-sm: 28px;   /* 小号按钮 */
+  --touch-target: 44px;    /* 最小触控区 */
+
+  /* ====================
+     导航规范
+     ==================== */
+  --nav-height: 56px;      /* 底部导航高度 */
+  --safe-area-top: 44px;   /* 顶部安全区 */
+  --safe-area-bottom: 34px; /* 底部安全区 */
+
+  /* ====================
+     动画
+     ==================== */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
+}
+
+/* ====================
+   暗黑模式（可选）
+   ==================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #0F172A;
+    --bg-secondary: #1E293B;
+    --bg-card: #1E293B;
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --text-light: #64748B;
+    --border: #334155;
+    --border-light: #1E293B;
+  }
+}
+
+/* ====================
+   全局重置
+   ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ====================
+   像素图片渲染
+   ==================== */
+.pixel-img {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* ====================
+   禁用 Vuetify ripple
+   ==================== */
+.v-ripple__container {
+  display: none !important;
+}
+
+/* ====================
+   响应式工具类
+   ==================== */
+.container-mobile {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 var(--spacing-md);
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .container-mobile {
+    max-width: 600px;
+    padding: 0 var(--spacing-lg);
+  }
+}
+
+/* 安全区域适配 */
+.safe-area-top {
+  padding-top: max(var(--spacing-md), env(safe-area-inset-top));
+}
+
+.safe-area-bottom {
+  padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+}
+
+/* ====================
+   字体工具类
+   ==================== */
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+.text-4xl { font-size: var(--font-size-4xl); }
+
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+
+/* ====================
+   间距工具类
+   ==================== */
+.spacing-xs { margin: var(--spacing-xs); }
+.spacing-sm { margin: var(--spacing-sm); }
+.spacing-md { margin: var(--spacing-md); }
+.spacing-lg { margin: var(--spacing-lg); }
+.spacing-xl { margin: var(--spacing-xl); }
