@@ -1,99 +1,135 @@
 <template>
   <div class="focus-view">
-    <div class="timer-container">
+    <div class="app-container">
+      <!-- 页面标题 -->
+      <h1 class="page-title pixel-font">⏱️ 专注计时</h1>
+
+      <!-- 像素宠物陪伴 -->
+      <div class="spirit-companion">
+        <div class="spirit-avatar pixel-font animate-pulse">
+          <v-icon size="80" color="primary">mdi-star-four-points</v-icon>
+        </div>
+        <div class="spirit-status pixel-font">
+          <div class="spirit-name">时光灵体</div>
+          <div class="spirit-level">Lv.{{ store.state.spirit.level }}</div>
+        </div>
+      </div>
+
       <!-- 计时器显示 -->
-      <div class="timer-display">
-        <div class="time-text">{{ formattedTime }}</div>
-        <div class="status-text">{{ statusText }}</div>
-      </div>
+      <div class="timer-container pixel-card">
+        <div class="timer-display pixel-font">
+          <div class="time-text">{{ formattedTime }}</div>
+          <div class="status-text">{{ statusText }}</div>
+        </div>
 
-      <!-- 控制按钮 -->
-      <div class="controls">
-        <v-btn
-          v-if="!isRunning && !isPaused"
-          color="primary"
-          size="x-large"
-          rounded="xl"
-          @click="startTimer"
-          class="control-btn"
-        >
-          <v-icon start>mdi-play</v-icon>
-          开始专注
-        </v-btn>
-
-        <v-btn
-          v-if="isRunning"
-          color="warning"
-          size="x-large"
-          rounded="xl"
-          @click="pauseTimer"
-          class="control-btn"
-        >
-          <v-icon start>mdi-pause</v-icon>
-          暂停
-        </v-btn>
-
-        <v-btn
-          v-if="isPaused"
-          color="primary"
-          size="x-large"
-          rounded="xl"
-          @click="resumeTimer"
-          class="control-btn"
-        >
-          <v-icon start>mdi-play</v-icon>
-          继续
-        </v-btn>
-
-        <v-btn
-          v-if="isRunning || isPaused"
-          color="error"
-          size="x-large"
-          rounded="xl"
-          variant="outlined"
-          @click="resetTimer"
-          class="control-btn"
-        >
-          <v-icon start>mdi-stop</v-icon>
-          停止
-        </v-btn>
-      </div>
-
-      <!-- 时长选择 -->
-      <div class="duration-selector" v-if="!isRunning && !isPaused">
-        <div class="selector-title">选择专注时长</div>
-        <div class="duration-options">
+        <!-- 控制按钮 -->
+        <div class="controls">
           <v-btn
-            v-for="opt in durationOptions"
-            :key="opt.minutes"
-            :color="selectedDuration === opt.minutes ? 'primary' : 'surface'"
-            variant="tonal"
+            v-if="!isRunning && !isPaused"
+            color="primary"
+            size="x-large"
             rounded="xl"
-            @click="selectedDuration = opt.minutes"
-            class="duration-btn"
+            @click="startTimer"
+            class="control-btn pixel-font"
           >
-            {{ opt.label }}
+            <v-icon start>mdi-play</v-icon>
+            开始专注
           </v-btn>
+
+          <v-btn
+            v-if="isRunning"
+            color="warning"
+            size="x-large"
+            rounded="xl"
+            @click="pauseTimer"
+            class="control-btn pixel-font"
+          >
+            <v-icon start>mdi-pause</v-icon>
+            暂停
+          </v-btn>
+
+          <v-btn
+            v-if="isPaused"
+            color="primary"
+            size="x-large"
+            rounded="xl"
+            @click="resumeTimer"
+            class="control-btn pixel-font"
+          >
+            <v-icon start>mdi-play</v-icon>
+            继续
+          </v-btn>
+
+          <v-btn
+            v-if="isRunning || isPaused"
+            color="error"
+            size="x-large"
+            variant="outlined"
+            @click="resetTimer"
+            class="control-btn pixel-font"
+          >
+            <v-icon start>mdi-stop</v-icon>
+            停止
+          </v-btn>
+        </div>
+
+        <!-- 时长选择 -->
+        <div class="duration-selector" v-if="!isRunning && !isPaused">
+          <div class="selector-title pixel-font">选择专注时长</div>
+          <div class="duration-options">
+            <v-btn
+              v-for="opt in durationOptions"
+              :key="opt.minutes"
+              :color="selectedDuration === opt.minutes ? 'primary' : 'default'"
+              variant="tonal"
+              rounded="xl"
+              @click="selectedDuration = opt.minutes"
+              class="duration-btn pixel-font"
+            >
+              {{ opt.label }}
+            </v-btn>
+          </div>
         </div>
       </div>
 
       <!-- 今日统计 -->
-      <div class="stats-card">
-        <v-card class="stats-inner" color="surface" variant="tonal">
-          <v-card-title class="stats-title">今日专注</v-card-title>
-          <v-card-text class="stats-content">
+      <div class="stats-section">
+        <div class="stats-card pixel-card">
+          <div class="stats-header">
+            <v-icon color="primary" start>mdi-timer-outline</v-icon>
+            <span class="stats-title pixel-font">今日专注</span>
+          </div>
+          <div class="stats-content">
             <div class="stat-item">
-              <v-icon color="primary" class="stat-icon">mdi-timer-outline</v-icon>
-              <div class="stat-value">{{ store.state.focus.todayMinutes }}</div>
+              <div class="stat-value pixel-font">{{ store.state.focus.todayMinutes }}</div>
               <div class="stat-label">分钟</div>
             </div>
             <div class="stat-item">
-              <v-icon color="accent" class="stat-icon">mdi-star-four-points</v-icon>
-              <div class="stat-value">+{{ sessionEarned }}</div>
+              <div class="stat-value pixel-font" style="color: var(--primary)">+{{ sessionEarned }}</div>
               <div class="stat-label">时光精粹</div>
             </div>
-          </v-card-text>
-        </v-card>
+          </div>
+        </div>
+      </div>
+
+      <!-- 专注提示 -->
+      <div class="focus-tip pixel-card">
+        <v-alert
+          type="info"
+          variant="tonal"
+          color="primary"
+          border="start"
+          class="tip-alert"
+        >
+          <template v-slot:title>
+            <div class="tip-title pixel-font">💡 专注小贴士</div>
+          </template>
+          <div class="tip-content">
+            • 专注时间越长，获得的精粹越多<br>
+            • 每专注 1 分钟 = 1 个精粹 + 10 点经验<br>
+            • 让你的时光灵体陪你一起成长！
+          </div>
+        </v-alert>
       </div>
     </div>
   </div>
@@ -193,9 +229,7 @@ const completeSession = () => {
   // 记录专注时间
   store.addFocusTime(selectedDuration.value)
   
-  // 提示音（可选）
-  // new Audio('/completion-sound.mp3').play().catch(() => {})
-  
+  // 提示
   alert(`✨ 专注完成！获得 ${selectedDuration.value} 个时光精粹`)
   remainingSeconds.value = selectedDuration.value * 60
 }
@@ -209,112 +243,173 @@ onUnmounted(() => {
 <style scoped>
 .focus-view {
   min-height: 100vh;
+  background: var(--bg);
+}
+
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+}
+
+/* 像素宠物陪伴 */
+.spirit-companion {
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.spirit-avatar {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(124, 115, 230, 0.2) 0%, rgba(170, 59, 255, 0.1) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-  padding: 20px;
+  border: 3px solid var(--border);
 }
 
+.spirit-status {
+  margin-top: 8px;
+}
+
+.spirit-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.spirit-level {
+  font-size: 14px;
+  color: var(--primary);
+  margin-top: 4px;
+}
+
+/* 计时器容器 */
 .timer-container {
-  max-width: 500px;
-  width: 100%;
+  margin: 20px;
+  padding: 30px 20px;
   text-align: center;
 }
 
 .timer-display {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .time-text {
-  font-size: 96px;
+  font-size: 64px;
   font-weight: 700;
-  color: #e2e8f0;
+  color: var(--primary);
   font-family: 'Courier New', monospace;
-  text-shadow: 0 0 30px rgba(124, 115, 230, 0.5);
-  margin-bottom: 10px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
 }
 
 .status-text {
-  font-size: 20px;
-  color: #90caf9;
-  letter-spacing: 2px;
-}
-
-.controls {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 40px;
-}
-
-.control-btn {
-  min-width: 140px;
-  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-light);
   letter-spacing: 1px;
 }
 
+/* 控制按钮 */
+.controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.control-btn {
+  min-width: 120px;
+  font-weight: 600;
+}
+
+/* 时长选择 */
 .duration-selector {
-  margin-bottom: 40px;
+  margin-top: 20px;
 }
 
 .selector-title {
-  color: #94a3b8;
-  margin-bottom: 16px;
-  font-size: 16px;
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 12px;
 }
 
 .duration-options {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .duration-btn {
-  min-width: 100px;
+  min-width: 90px;
+}
+
+/* 统计区域 */
+.stats-section {
+  padding: 0 20px;
 }
 
 .stats-card {
-  margin-top: 20px;
+  padding: 20px;
 }
 
-.stats-inner {
-  border: 1px solid rgba(124, 115, 230, 0.3);
+.stats-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
 .stats-title {
   font-size: 16px;
-  color: #94a3b8;
-  padding-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-left: 8px;
 }
 
 .stats-content {
   display: flex;
   justify-content: space-around;
-  padding: 16px 0;
 }
 
 .stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.stat-icon {
-  margin-bottom: 8px;
+  text-align: center;
 }
 
 .stat-value {
   font-size: 32px;
   font-weight: 700;
-  color: #e2e8f0;
+  color: var(--text-dark);
 }
 
 .stat-label {
   font-size: 14px;
-  color: #64748b;
+  color: var(--text-light);
   margin-top: 4px;
+}
+
+/* 专注提示 */
+.focus-tip {
+  margin: 20px;
+  padding: 0;
+}
+
+.tip-alert {
+  border-radius: 12px;
+}
+
+.tip-title {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.tip-content {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
 }
 </style>
