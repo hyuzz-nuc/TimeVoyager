@@ -363,7 +363,7 @@
             :class="{ disabled: count <= 0 }"
             @click="useItemFn(getItemConfig(itemId))"
           >
-            <span class="item-icon">{{ getItemIcon(itemId) }}</span>
+            <img :src="`/src/assets/pixel/items/${itemId}.png`" :alt="getItemName(itemId)" class="item-icon-img" />
             <div class="item-details">
               <div class="item-name">{{ getItemName(itemId) }}</div>
               <div class="item-desc">{{ getItemDescription(itemId) }}</div>
@@ -1646,6 +1646,15 @@ function getItemDescription(itemId: string): string {
 
 .item-icon {
   font-size: 28px;
+  margin-right: 12px;
+}
+
+.item-icon-img {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
   margin-right: 12px;
 }
 
