@@ -77,6 +77,7 @@ const authStore = useAuthStore()
 const resetTime = ref('23:59:59')
 
 const tasks = ref([
+  // 专注类任务
   {
     id: 'daily_focus_1',
     name: '专注达人',
@@ -96,14 +97,34 @@ const tasks = ref([
     completed: false,
   },
   {
-    id: 'daily_steps',
-    name: '运动达人',
-    description: '行走 5000 步',
-    target: 5000,
+    id: 'daily_focus_8',
+    name: '专注王者',
+    description: '完成 8 次专注',
+    target: 8,
+    progress: 0,
+    reward: 100,
+    completed: false,
+  },
+  // 探索类任务
+  {
+    id: 'daily_explore',
+    name: '探索者',
+    description: '探索 10 个格子',
+    target: 10,
     progress: 0,
     reward: 20,
     completed: false,
   },
+  {
+    id: 'daily_explore_20',
+    name: '星际探险家',
+    description: '探索 20 个格子',
+    target: 20,
+    progress: 0,
+    reward: 40,
+    completed: false,
+  },
+  // 战斗类任务
   {
     id: 'daily_battle',
     name: '战斗新手',
@@ -114,12 +135,51 @@ const tasks = ref([
     completed: false,
   },
   {
-    id: 'daily_explore',
-    name: '探索者',
-    description: '探索 10 个格子',
-    target: 10,
+    id: 'daily_battle_3',
+    name: '战斗老手',
+    description: '赢得 3 场对战',
+    target: 3,
+    progress: 0,
+    reward: 80,
+    completed: false,
+  },
+  // 收集类任务
+  {
+    id: 'daily_collect',
+    name: '收藏家',
+    description: '收集 1 个新星灵',
+    target: 1,
+    progress: 0,
+    reward: 25,
+    completed: false,
+  },
+  // 运动类任务
+  {
+    id: 'daily_steps',
+    name: '运动达人',
+    description: '行走 5000 步',
+    target: 5000,
     progress: 0,
     reward: 20,
+    completed: false,
+  },
+  {
+    id: 'daily_steps_10k',
+    name: '运动健将',
+    description: '行走 10000 步',
+    target: 10000,
+    progress: 0,
+    reward: 50,
+    completed: false,
+  },
+  // 商店类任务
+  {
+    id: 'daily_shop',
+    name: '购物达人',
+    description: '在商店消费 1 次',
+    target: 1,
+    progress: 0,
+    reward: 15,
     completed: false,
   },
 ])

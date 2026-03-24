@@ -1,0 +1,570 @@
+/**
+ * 敌方星灵技能配置（14 种）
+ */
+
+import type { SpiritSkills } from '../types/skills'
+
+export const ENEMY_SKILLS: Record<string, SpiritSkills> = {
+  // ==================== 普通敌人（3 种）====================
+  
+  // 1. 暗影小兵
+  shadow_minion: {
+    spiritId: 'shadow_minion',
+    skills: [
+      {
+        id: 'shadow_claw',
+        name: '暗影爪击',
+        type: 'basic',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.0,
+        cooldown: 0,
+        description: '造成 100% 攻击伤害',
+      },
+      {
+        id: 'shadow_curse',
+        name: '虚弱诅咒',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        cooldown: 3,
+        effect: {
+          type: 'weak',
+          probability: 1.0,
+          duration: 2,
+          value: 0.15,
+          description: '攻击 -15%',
+        },
+        description: '降低敌方攻击 15%，持续 2 回合',
+      },
+    ],
+    passives: [],
+  },
+  
+  // 2. 腐化彗星
+  corrupted_comet: {
+    spiritId: 'corrupted_comet',
+    skills: [
+      {
+        id: 'comet_shot',
+        name: '冰晶射击',
+        type: 'basic',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.0,
+        cooldown: 0,
+        description: '造成 100% 攻击伤害',
+      },
+      {
+        id: 'comet_freeze',
+        name: '冻结光束',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 0.8,
+        cooldown: 4,
+        effect: {
+          type: 'freeze',
+          probability: 0.4,
+          duration: 1,
+          description: '40% 概率冻结',
+        },
+        description: '造成 80% 伤害，40% 概率冻结',
+      },
+      {
+        id: 'comet_accel',
+        name: '彗星加速',
+        type: 'active',
+        target: 'self',
+        unlockLevel: 1,
+        cooldown: 5,
+        effect: {
+          type: 'speed_up',
+          probability: 1.0,
+          duration: 2,
+          value: 0.3,
+          description: '速度 +30%',
+        },
+        description: '速度 +30%，持续 2 回合',
+      },
+    ],
+    passives: [],
+  },
+  
+  // 3. 能量吸血鬼
+  energy_vampire: {
+    spiritId: 'energy_vampire',
+    skills: [
+      {
+        id: 'vampire_drain',
+        name: '能量吸取',
+        type: 'basic',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.0,
+        cooldown: 0,
+        stealHpMultiplier: 0.2,
+        description: '造成 100% 伤害，吸血 20%',
+      },
+      {
+        id: 'vampire_weak',
+        name: '虚弱状态',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        cooldown: 4,
+        effect: {
+          type: 'weak',
+          probability: 1.0,
+          duration: 3,
+          value: 0.2,
+          description: '攻击 -20%',
+        },
+        description: '降低敌方攻击 20%，持续 3 回合',
+      },
+      {
+        id: 'vampire_heal',
+        name: '能量汲取',
+        type: 'active',
+        target: 'self',
+        unlockLevel: 1,
+        cooldown: 5,
+        healingMultiplier: 0.15,
+        description: '回复 15% HP',
+      },
+    ],
+    passives: [],
+  },
+  
+  // ==================== 精英敌人（4 种）====================
+  
+  // 4. 暗影骑士
+  shadow_knight: {
+    spiritId: 'shadow_knight',
+    skills: [
+      {
+        id: 'knight_slash',
+        name: '暗影斩',
+        type: 'basic',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.2,
+        cooldown: 0,
+        description: '造成 120% 伤害',
+      },
+      {
+        id: 'knight_combo',
+        name: '连击',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 0.8,
+        cooldown: 4,
+        description: '连续 2 次 80% 伤害',
+      },
+      {
+        id: 'knight_defend',
+        name: '防御姿态',
+        type: 'active',
+        target: 'self',
+        unlockLevel: 1,
+        cooldown: 5,
+        effect: {
+          type: 'defense_up',
+          probability: 1.0,
+          duration: 2,
+          value: 0.5,
+          description: '防御 +50%',
+        },
+        description: '防御 +50%，持续 2 回合',
+      },
+      {
+        id: 'knight突袭',
+        name: '暗影突袭',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.8,
+        cooldown: 6,
+        description: '造成 180% 伤害，先手时 +30%',
+      },
+    ],
+    passives: [],
+  },
+  
+  // 5. 邪恶星云
+  evil_nebula: {
+    spiritId: 'evil_nebula',
+    skills: [
+      {
+        id: 'nebula_poison',
+        name: '毒雾喷射',
+        type: 'basic',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.0,
+        cooldown: 0,
+        effect: {
+          type: 'poison',
+          probability: 0.3,
+          duration: 3,
+          damagePerTurn: 0.08,
+          description: '30% 概率中毒',
+        },
+        description: '造成 100% 伤害，30% 概率中毒',
+      },
+      {
+        id: 'nebula_corrode',
+        name: '腐蚀毒云',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.2,
+        cooldown: 3,
+        effect: {
+          type: 'corrode',
+          probability: 0.5,
+          duration: 3,
+          value: 0.2,
+          description: '防御 -20%',
+        },
+        description: '造成 120% 伤害，防御 -20%',
+      },
+      {
+        id: 'nebula_barrier',
+        name: '星云屏障',
+        type: 'active',
+        target: 'self',
+        unlockLevel: 1,
+        cooldown: 5,
+        shieldMultiplier: 0.3,
+        description: '吸收 30% HP 伤害，持续 3 回合',
+      },
+      {
+        id: 'nebula_burst',
+        name: '剧毒爆发',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.5,
+        cooldown: 6,
+        description: '造成 150% 伤害，中毒时 +50%',
+      },
+    ],
+    passives: [],
+  },
+  
+  // 6. 虚空行者
+  void_walker: {
+    spiritId: 'void_walker',
+    skills: [
+      {
+        id: 'walker突袭',
+        name: '虚空突袭',
+        type: 'basic',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.2,
+        cooldown: 0,
+        description: '造成 120% 伤害，暴击率 +20%',
+      },
+      {
+        id: 'walker_phase',
+        name: '相位转移',
+        type: 'active',
+        target: 'self',
+        unlockLevel: 1,
+        cooldown: 6,
+        description: '闪避 100%，持续 1 回合',
+      },
+      {
+        id: 'walker_step',
+        name: '暗影步',
+        type: 'active',
+        target: 'self',
+        unlockLevel: 1,
+        cooldown: 4,
+        effect: {
+          type: 'speed_up',
+          probability: 1.0,
+          duration: 1,
+          value: 0.4,
+          description: '速度 +40%，下次攻击必暴',
+        },
+        description: '速度 +40%，下次攻击必暴',
+      },
+      {
+        id: 'walker_tear',
+        name: '虚空撕裂',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 2.0,
+        cooldown: 7,
+        description: '造成 200% 伤害，暴击时 +50%',
+      },
+    ],
+    passives: [],
+  },
+  
+  // 7. 时间幽灵
+  time_wraith: {
+    spiritId: 'time_wraith',
+    skills: [
+      {
+        id: 'wraith_impact',
+        name: '时间冲击',
+        type: 'basic',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.0,
+        cooldown: 0,
+        description: '造成 100% 攻击伤害',
+      },
+      {
+        id: 'wraith_stop',
+        name: '时间停滞',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 0.8,
+        cooldown: 5,
+        effect: {
+          type: 'stun',
+          probability: 0.4,
+          duration: 1,
+          description: '40% 概率跳过敌方回合',
+        },
+        description: '造成 80% 伤害，40% 概率跳过敌方回合',
+      },
+      {
+        id: 'wraith_accel',
+        name: '年龄加速',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.2,
+        cooldown: 4,
+        description: '造成 120% 伤害，持续 2 回合',
+      },
+      {
+        id: 'wraith_rewind',
+        name: '时间回溯',
+        type: 'active',
+        target: 'self',
+        unlockLevel: 1,
+        cooldown: 7,
+        healingMultiplier: 0.2,
+        description: '回复 20% HP，回到 1 回合前状态',
+      },
+    ],
+    passives: [],
+  },
+  
+  // ==================== Boss 敌人（简化版，3 种）====================
+  
+  // 12. 虚空魔王
+  void_demon_lord: {
+    spiritId: 'void_demon_lord',
+    skills: [
+      {
+        id: 'demon_claw',
+        name: '魔王爪击',
+        type: 'basic',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.2,
+        cooldown: 0,
+        description: '造成 120% 伤害',
+      },
+      {
+        id: 'demon_destroy',
+        name: '虚空毁灭',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 2.0,
+        cooldown: 5,
+        description: '造成 200% 伤害，无视 30% 防御',
+      },
+      {
+        id: 'demon_darkness',
+        name: '黑暗降临',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        cooldown: 6,
+        effect: {
+          type: 'weak',
+          probability: 1.0,
+          duration: 3,
+          value: 0.2,
+          description: '全属性 -20%',
+        },
+        description: '敌方全属性 -20%，持续 3 回合',
+      },
+      {
+        id: 'demon_pressure',
+        name: '魔王威压',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        cooldown: 7,
+        effect: {
+          type: 'weak',
+          probability: 1.0,
+          duration: 3,
+          value: 0.3,
+          description: '攻击 -30%',
+        },
+        description: '降低敌方攻击 30%，持续 3 回合',
+      },
+      {
+        id: 'demon_annihilation',
+        name: '虚空湮灭',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 3.0,
+        cooldown: 6,
+        description: '造成 300% 伤害，自伤 15%',
+      },
+    ],
+    passives: [],
+  },
+  
+  // 13. 时间主宰
+  time_dominator: {
+    spiritId: 'time_dominator',
+    skills: [
+      {
+        id: 'dominator_strike',
+        name: '时间打击',
+        type: 'basic',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.2,
+        cooldown: 0,
+        description: '造成 120% 伤害',
+      },
+      {
+        id: 'dominator_stop',
+        name: '时间停止',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.0,
+        cooldown: 6,
+        effect: {
+          type: 'stun',
+          probability: 0.5,
+          duration: 1,
+          description: '50% 概率跳过敌方回合',
+        },
+        description: '造成 100% 伤害，50% 概率跳过敌方回合',
+      },
+      {
+        id: 'dominator_rewind',
+        name: '时光倒流',
+        type: 'active',
+        target: 'self',
+        unlockLevel: 1,
+        cooldown: 10,
+        healingMultiplier: 1.0,
+        description: '回复全部 HP',
+      },
+      {
+        id: 'dominator_accel',
+        name: '时间加速',
+        type: 'active',
+        target: 'self',
+        unlockLevel: 1,
+        cooldown: 5,
+        effect: {
+          type: 'speed_up',
+          probability: 1.0,
+          duration: 3,
+          value: 0.5,
+          description: '速度 +50%',
+        },
+        description: '速度 +50%，持续 3 回合',
+      },
+      {
+        id: 'dominator_banish',
+        name: '永恒放逐',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 2.0,
+        cooldown: 8,
+        description: '10% 概率秒杀，失败则 200% 伤害',
+      },
+    ],
+    passives: [],
+  },
+  
+  // 14. 混沌始祖
+  chaos_primordial: {
+    spiritId: 'chaos_primordial',
+    skills: [
+      {
+        id: 'chaos_strike',
+        name: '混沌打击',
+        type: 'basic',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 1.2,
+        cooldown: 0,
+        description: '造成 120% 伤害，随机效果',
+      },
+      {
+        id: 'chaos_create',
+        name: '混沌创世',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 2.5,
+        cooldown: 6,
+        description: '造成 250% 伤害，30% 概率额外 +100%',
+      },
+      {
+        id: 'chaos_break',
+        name: '规则破坏',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        cooldown: 8,
+        description: '禁用敌方被动技能，持续 3 回合',
+      },
+      {
+        id: 'chaos_swallow',
+        name: '虚无吞噬',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 2.0,
+        cooldown: 7,
+        description: '15% 概率秒杀，失败则 200% 伤害',
+      },
+      {
+        id: 'chaos_restart',
+        name: '宇宙重启',
+        type: 'active',
+        target: 'enemy',
+        unlockLevel: 1,
+        damageMultiplier: 5.0,
+        cooldown: 15,
+        description: '造成 500% 伤害',
+      },
+    ],
+    passives: [],
+  },
+}
+
+// 导出敌人 ID 列表
+export const ENEMY_IDS = Object.keys(ENEMY_SKILLS)
+
+// 获取敌人技能
+export function getEnemySkills(enemyId: string): SpiritSkills | undefined {
+  return ENEMY_SKILLS[enemyId]
+}

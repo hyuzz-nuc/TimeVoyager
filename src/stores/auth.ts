@@ -29,6 +29,11 @@ export const useAuthStore = defineStore('auth', () => {
   const nickname = computed(() => user.value.nickname)
   const level = computed(() => user.value.level)
   const crystals = computed(() => user.value.crystals)
+  const hasCompletedGuide = computed(() => newbieGuide.value.shown && newbieGuide.value.step >= 999)
+  const userState = computed(() => ({
+    hasCompletedGuide: hasCompletedGuide.value,
+    hasClaimedInitialSpirit: newbieGuide.value.initialSpiritClaimed,
+  }))
   
   // Actions
   function initUser() {

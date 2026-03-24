@@ -1,0 +1,127 @@
+/**
+ * 全局点击反馈样式
+ * 为所有可点击元素添加统一的交互反馈
+ */
+
+/* 通用按钮点击效果 */
+.v-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.v-btn:active {
+  transform: scale(0.96) !important;
+}
+
+/* 卡片点击效果 */
+.pixel-card,
+.v-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* 可点击的卡片 */
+.v-card[style*="cursor: pointer"],
+.clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.clickable:active {
+  transform: scale(0.98);
+}
+
+/* 列表项点击效果 */
+.v-list-item {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.2s ease;
+}
+
+.v-list-item:active {
+  background-color: rgba(var(--v-theme-primary), 0.08);
+}
+
+/* 图标按钮点击效果 */
+.v-icon.clickable {
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.v-icon.clickable:active {
+  transform: scale(0.9);
+}
+
+/* 网格项点击效果 */
+.grid-item {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s ease;
+}
+
+.grid-item:active {
+  transform: scale(0.95);
+}
+
+/* 触摸反馈层（用于自定义组件） */
+.touch-feedback {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.05);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.touch-feedback:active {
+  opacity: 1;
+}
+
+/* 禁用状态 */
+.disabled,
+[disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 加载状态 */
+.loading {
+  pointer-events: none;
+  position: relative;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  cursor: wait;
+}
+
+/* 长按反馈（用于特殊交互） */
+.long-press {
+  transition: transform 0.3s ease;
+}
+
+.long-press:active {
+  transform: scale(0.9);
+}
+
+/* 滑动反馈（用于可滑动元素） */
+.swipeable {
+  touch-action: pan-x;
+}
+
+/* 禁用文本选择（提升移动端体验） */
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}

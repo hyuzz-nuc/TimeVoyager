@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import './styles/variables.css'
+import './styles/click-feedback.css'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'

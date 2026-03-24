@@ -1,23 +1,14 @@
 /**
  * Pinia Store - 对战系统管理
+ * 整合新技能系统
  */
 
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import type { BattleSpirit as SkillBattleSpirit, BattleStatusEffect } from '../engine/skillEngine'
+import type { Element } from '../types/skills'
 
-export interface BattleSpirit {
-  id: string
-  name: string
-  level: number
-  hp: number
-  maxHp: number
-  attack: number
-  defense: number
-  speed: number
-  skills: BattleSkill[]
-  stage: string
-}
-
+// 兼容旧接口，逐步迁移到新技能系统
 export interface BattleSkill {
   id: string
   name: string
@@ -29,24 +20,20 @@ export interface BattleSkill {
   description: string
 }
 
-export interface BattleEnemy {
-  id: string
-  name: string
-  level: number
-  hp: number
-  maxHp: number
-  attack: number
-  defense: number
-  speed: number
-  skills: BattleSkill[]
-  reward: BattleReward
-}
-
 export interface BattleReward {
   crystals: number
   coins?: number
   exp?: number
   itemDrop?: string
+}
+
+// 战斗星灵 - 使用引擎定义
+export interface BattleSpirit extends SkillBattleSpirit {}
+
+// 战斗敌人 - 扩展星灵接口
+export interface BattleEnemy extends Omit<SkillBattleSpirit, 'id' | 'stage' | 'energy' | 'maxEnergy'> {
+  reward: BattleReward
+  difficulty?: number
 }
 
 export const useBattleStore = defineStore('battle', () => {

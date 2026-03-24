@@ -9,6 +9,9 @@
       </router-view>
     </v-main>
 
+    <!-- 新手引导 -->
+    <NewbieGuide />
+
     <!-- 底部导航栏（移动端） -->
     <v-bottom-navigation
       :model-value="currentRoute"
@@ -35,6 +38,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import NewbieGuide from './NewbieGuide.vue'
 
 const router = useRouter()
 const route = useRoute()

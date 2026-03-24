@@ -112,16 +112,25 @@
         我的星灵
       </v-card-title>
       <v-card-text>
-        <div class="spirits-preview">
+        <div v-if="spiritStore.isLoading" class="spirits-loading">
+          <LoadingState text="加载星灵中..." />
+        </div>
+        <EmptyState
+          v-else-if="spiritStore.collectedCount === 0"
+          icon="mdi-star-outline"
+          title="还没有星灵"
+          description="完成新手引导或探索星域地图，获得你的第一只星灵吧！"
+          action-text="去探索"
+          action-color="primary"
+          @action="$router.push('/map')"
+        />
+        <div v-else class="spirits-preview">
           <div
             v-for="i in Math.min(3, spiritStore.collectedCount)"
             :key="i"
             class="spirit-placeholder"
           >
             <v-icon icon="mdi-star" size="40" color="primary" />
-          </div>
-          <div v-if="spiritStore.collectedCount === 0" class="spirit-placeholder empty">
-            <span class="empty-text">暂无星灵</span>
           </div>
           <div v-if="spiritStore.collectedCount > 3" class="spirit-more">
             <span>+{{ spiritStore.collectedCount - 3 }}</span>
@@ -137,6 +146,8 @@ import { computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useSpiritStore } from '@/stores/spirits'
 import { useAuthStore } from '@/stores/auth'
+import EmptyState from '@/components/EmptyState.vue'
+import LoadingState from '@/components/LoadingState.vue'
 
 const userStore = useUserStore()
 const spiritStore = useSpiritStore()
@@ -223,11 +234,42 @@ spiritStore.loadSpirits()
   padding: var(--spacing-sm);
   border-radius: var(--radius-sm);
   transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .quick-action-item:hover {
   background: var(--bg-secondary);
   transform: translateY(-2px);
+}
+
+.quick-action-item:active {
+  transform: scale(0.95);
+  background: var(--bg-tertiary);
+}
+
+/* 点击波纹效果 */
+.quick-action-item::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.quick-action-item:active::after {
+  width: 150%;
+  height: 150%;
+  opacity: 1;
 }
 
 .action-icon {
@@ -344,6 +386,10 @@ spiritStore.loadSpirits()
 .action-btn {
   min-width: 200px;
   font-weight: var(--font-weight-semibold);
+}
+
+.spirits-loading {
+  padding: var(--spacing-lg) 0;
 }
 
 .spirits-preview {

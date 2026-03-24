@@ -72,6 +72,7 @@ const categories = [
 ]
 
 const shopItems = [
+  // 星灵类
   {
     id: 'spirit_random',
     name: '随机星灵',
@@ -81,6 +82,34 @@ const shopItems = [
     icon: 'mdi-star',
     color: 'primary',
   },
+  {
+    id: 'spirit_fire',
+    name: '火之星灵',
+    description: '火焰属性的星灵',
+    price: 300,
+    category: 'spirit',
+    icon: 'mdi-fire',
+    color: 'red',
+  },
+  {
+    id: 'spirit_water',
+    name: '水之星灵',
+    description: '水属性的星灵',
+    price: 300,
+    category: 'spirit',
+    icon: 'mdi-water',
+    color: 'blue',
+  },
+  {
+    id: 'spirit_wood',
+    name: '木之星灵',
+    description: '木属性的星灵',
+    price: 300,
+    category: 'spirit',
+    icon: 'mdi-leaf',
+    color: 'green',
+  },
+  // 道具类
   {
     id: 'item_focus_potion',
     name: '专注药水',
@@ -107,6 +136,52 @@ const shopItems = [
     category: 'item',
     icon: 'mdi-shield',
     color: 'green',
+  },
+  {
+    id: 'item_speed_boost',
+    name: '加速道具',
+    description: '专注时间缩短 25%',
+    price: 40,
+    category: 'item',
+    icon: 'mdi-speedometer',
+    color: 'orange',
+  },
+  {
+    id: 'item_luck_charm',
+    name: '幸运符',
+    description: '探索奖励 +25%',
+    price: 60,
+    category: 'item',
+    icon: 'mdi-clover',
+    color: 'green',
+  },
+  // 皮肤类
+  {
+    id: 'skin_blue_theme',
+    name: '蓝色主题',
+    description: '界面蓝色主题',
+    price: 150,
+    category: 'skin',
+    icon: 'mdi-palette',
+    color: 'blue',
+  },
+  {
+    id: 'skin_purple_theme',
+    name: '紫色主题',
+    description: '界面紫色主题',
+    price: 150,
+    category: 'skin',
+    icon: 'mdi-palette',
+    color: 'purple',
+  },
+  {
+    id: 'skin_dark_theme',
+    name: '暗黑主题',
+    description: '界面暗黑主题',
+    price: 200,
+    category: 'skin',
+    icon: 'mdi-moon-waning-crescent',
+    color: 'grey',
   },
 ]
 

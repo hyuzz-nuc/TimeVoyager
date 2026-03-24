@@ -127,6 +127,16 @@ const routes: RouteRecordRaw[] = [
       title: '灵感记录',
     },
   },
+  // 测试页面
+  {
+    path: '/skill-test',
+    name: 'skill-test',
+    component: () => import('@/views/SkillTestView.vue'),
+    meta: { 
+      title: '技能系统测试',
+      requiresAuth: false,
+    },
+  },
 ]
 
 const router = createRouter({
