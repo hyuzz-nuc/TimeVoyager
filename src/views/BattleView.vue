@@ -354,23 +354,24 @@
     <!-- 道具弹窗 -->
     <div v-if="showItemModal" class="modal-overlay" @click="showItemModal = false">
       <div class="modal-content" @click.stop>
-        <h3 class="modal-title">使用道具</h3>
+        <h3 class="modal-title">🎒 使用道具</h3>
         <div class="item-list">
-          <div class="item-item disabled">
-            <span class="item-icon">🧪</span>
+          <div
+            v-for="(count, itemId) in itemInventory"
+            :key="itemId"
+            class="item-item"
+            :class="{ disabled: count <= 0 }"
+            @click="useItemFn(getItemConfig(itemId))"
+          >
+            <span class="item-icon">{{ getItemIcon(itemId) }}</span>
             <div class="item-details">
-              <div class="item-name">治疗药水</div>
-              <div class="item-desc">回复 50% HP</div>
+              <div class="item-name">{{ getItemName(itemId) }}</div>
+              <div class="item-desc">{{ getItemDescription(itemId) }}</div>
             </div>
-            <span class="item-count">×3</span>
+            <span class="item-count">×{{ count }}</span>
           </div>
-          <div class="item-item disabled">
-            <span class="item-icon">💊</span>
-            <div class="item-details">
-              <div class="item-name">解毒剂</div>
-              <div class="item-desc">解除中毒状态</div>
-            </div>
-            <span class="item-count">×2</span>
+          <div v-if="Object.keys(itemInventory).length === 0" class="empty-message">
+            没有道具
           </div>
         </div>
         <button class="modal-close-btn" @click="showItemModal = false">取消</button>
@@ -397,6 +398,7 @@ import { EXTRA_SPIRIT_SKILLS } from '@/data/extraSpiritSkills'
 import { ENEMY_SKILLS } from '@/data/enemySkills'
 import { useSpiritStore } from '@/stores/spirits'
 import { chooseBestSkill, getAIDecisionLog } from '@/engine/enemyAI'
+import { ITEMS, useItem, type ItemConfig } from '@/data/items'
 
 // ==================== 状态定义 ====================
 
@@ -413,6 +415,15 @@ const autoBattle = ref(false)
 // 弹窗状态
 const showSwitchModal = ref(false)
 const showItemModal = ref(false)
+
+// 道具库存（简化实现，后续从用户数据获取）
+const itemInventory = ref<Record<string, number>>({
+  'potion_small': 3,
+  'potion_medium': 2,
+  'antidote': 2,
+  'awaken': 1,
+  'smoke_bomb': 1,
+})
 
 // 战斗日志
 const battleLogs = ref<string[]>([])
@@ -659,6 +670,19 @@ function startBattle() {
   // 初始化技能
   initSpiritSkills(playerSpirit.value)
   initEnemySkills(enemy.value)
+  
+  // 初始化特殊机制字段
+  playerSpirit.value.history = []
+  playerSpirit.value.swallowStacks = 0
+  playerSpirit.value.chaosDice = 0
+  playerSpirit.value.chaosLuck = 0
+  
+  if (enemy.value) {
+    enemy.value.history = []
+    enemy.value.swallowStacks = 0
+    enemy.value.chaosDice = 0
+    enemy.value.chaosLuck = 0
+  }
 
   // 重置状态
   inBattle.value = true
@@ -711,7 +735,7 @@ function useSkill(skill: BattleSkill) {
   }
 
   // 回合结束处理
-  const endLogs = onTurnEnd(enemy.value)
+  const endLogs = onTurnEnd(enemy.value, turnCount.value)
   endLogs.forEach(log => addLog(log))
 
   // 减少冷却
@@ -755,7 +779,7 @@ function enemyAction() {
   }
 
   // 回合结束处理
-  const endLogs = onTurnEnd(playerSpirit.value)
+  const endLogs = onTurnEnd(playerSpirit.value, turnCount.value)
   endLogs.forEach(log => addLog(log))
 
   // 减少冷却
@@ -784,6 +808,52 @@ function endBattle(result: 'victory' | 'defeat') {
     winStreak.value = 0
     addLog('💀 失败...')
   }
+}
+
+// 使用道具
+function useItemFn(item: ItemConfig) {
+  if (!playerSpirit.value || !inBattle.value || !playerTurn.value) return
+  if (!itemInventory.value[item.id] || itemInventory.value[item.id] <= 0) return
+  
+  // 检查目标
+  let target: BattleSpirit | null = null
+  if (item.target === 'self') {
+    target = playerSpirit.value
+  } else if (item.target === 'ally') {
+    // 简化：对自己使用
+    target = playerSpirit.value
+  } else if (item.target === 'enemy' && enemy.value) {
+    target = enemy.value
+  }
+  
+  if (!target) return
+  
+  // 使用道具
+  const result = useItem(item, target, playerSpirit.value)
+  
+  // 记录日志
+  result.log.forEach(log => addLog(log))
+  
+  // 消耗道具
+  if (result.consumed) {
+    itemInventory.value[item.id]--
+  }
+  
+  // 逃跑道具特殊处理
+  if (item.effect.escape && result.success) {
+    setTimeout(() => {
+      tryEscape()
+    }, 1000)
+    return
+  }
+  
+  // 切换回合（如果不是逃跑）
+  if (!item.effect.escape) {
+    playerTurn.value = false
+    setTimeout(enemyAction, 1000)
+  }
+  
+  showItemModal.value = false
 }
 
 // 切换星灵
@@ -924,6 +994,22 @@ function getEffectIcon(type: string) {
 
 function getEffectDescription(effect: BattleStatusEffect) {
   return `${getEffectName(effect.effect.type)} (${effect.remainingTurns}回合)`
+}
+
+function getItemConfig(itemId: string): ItemConfig {
+  return ITEMS[itemId]
+}
+
+function getItemIcon(itemId: string): string {
+  return ITEMS[itemId]?.icon || '📦'
+}
+
+function getItemName(itemId: string): string {
+  return ITEMS[itemId]?.name || '未知道具'
+}
+
+function getItemDescription(itemId: string): string {
+  return ITEMS[itemId]?.description || ''
 }
 </script>
 
