@@ -2,7 +2,7 @@
  * 技能系统单元测试
  */
 
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import {
   calculateDamage,
   calculateHealing,
@@ -12,10 +12,18 @@ import {
   reduceCooldowns,
   isAlive,
   createBattleSkill,
+  saveHistoryState,
+  timeRewind,
+  blackHoleSwallow,
+  getBlackHoleBonus,
+  rollChaosDice,
+  getChaosMultiplier,
+  updateChaosLuck,
   type BattleSpirit,
 } from '../engine/skillEngine'
 import { getElementMultiplier } from '../types/skills'
 import { chooseBestSkill } from '../engine/enemyAI'
+import { ITEMS, useItem } from '../data/items'
 
 // 测试用星灵
 function createTestSpirit(overrides: Partial<BattleSpirit> = {}): BattleSpirit {
@@ -386,5 +394,207 @@ describe('敌方 AI', () => {
       
       expect(bestSkill).not.toBeNull()
     })
+  })
+})
+
+// ==================== P2 功能测试 ====================
+
+describe('P2-3: 道具系统', () => {
+  describe('治疗类道具', () => {
+    it('中型治疗药水回复 50% HP', () => {
+      const target = createTestSpirit({ hp: 100, maxHp: 200 })
+      const item = ITEMS['potion_medium']
+      const result = useItem(item, target)
+      
+      expect(result.success).toBe(true)
+      expect(result.consumed).toBe(true)
+      expect(target.hp).toBeGreaterThan(100)
+      expect(target.hp).toBeLessThanOrEqual(200)
+    })
+  })
+  
+  describe('状态解除类', () => {
+    it('解毒剂解除中毒', () => {
+      const target = createTestSpirit()
+      
+      // 施加中毒
+      applyStatusEffect(target, {
+        type: 'poison',
+        probability: 1.0,
+        duration: 3,
+        damagePerTurn: 0.08,
+        description: '中毒',
+      })
+      
+      expect(target.debuffs.length).toBe(1)
+      
+      // 使用解毒剂
+      const item = ITEMS['antidote']
+      useItem(item, target)
+      
+      expect(target.debuffs.length).toBe(0)
+    })
+    
+    it('万能药解除所有异常', () => {
+      const target = createTestSpirit()
+      
+      // 施加多个 debuff
+      applyStatusEffect(target, {
+        type: 'poison',
+        probability: 1.0,
+        duration: 3,
+        description: '中毒',
+      })
+      applyStatusEffect(target, {
+        type: 'burn',
+        probability: 1.0,
+        duration: 3,
+        description: '灼烧',
+      })
+      
+      expect(target.debuffs.length).toBe(2)
+      
+      // 使用万能药
+      const item = ITEMS['panacea']
+      useItem(item, target)
+      
+      expect(target.debuffs.length).toBe(0)
+    })
+  })
+  
+  describe('增益类道具', () => {
+    it('攻击强化剂提升攻击', () => {
+      const target = createTestSpirit()
+      const item = ITEMS['attack_boost']
+      const result = useItem(item, target)
+      
+      expect(result.success).toBe(true)
+      expect(target.buffs.length).toBe(1)
+      expect(target.buffs[0].effect.type).toBe('attack_up')
+    })
+  })
+})
+
+describe('P2-4: 时间回溯机制', () => {
+  it('保存历史状态', () => {
+    const spirit = createTestSpirit({ hp: 200 })
+    saveHistoryState(spirit, 1)
+    
+    expect(spirit.history?.length).toBe(1)
+    expect(spirit.history?.[0].hp).toBe(200)
+    expect(spirit.history?.[0].turn).toBe(1)
+  })
+  
+  it('时间回溯到 2 回合前', () => {
+    const spirit = createTestSpirit({ hp: 200 })
+    
+    // 第 1 回合
+    spirit.hp = 200
+    saveHistoryState(spirit, 1)
+    
+    // 第 2 回合
+    spirit.hp = 150
+    saveHistoryState(spirit, 2)
+    
+    // 第 3 回合
+    spirit.hp = 100
+    saveHistoryState(spirit, 3)
+    
+    // 回溯 2 回合
+    const success = timeRewind(spirit, 2)
+    
+    expect(success).toBe(true)
+    expect(spirit.hp).toBe(150) // 回到第 2 回合
+    expect(spirit.history?.length).toBe(1) // 清除回溯后的记录
+  })
+  
+  it('历史记录最多 5 个', () => {
+    const spirit = createTestSpirit()
+    
+    // 保存 10 个历史
+    for (let i = 1; i <= 10; i++) {
+      spirit.hp = 200 - i * 10
+      saveHistoryState(spirit, i)
+    }
+    
+    expect(spirit.history?.length).toBeLessThanOrEqual(5)
+  })
+})
+
+describe('P2-5: 黑洞吞噬机制', () => {
+  it('吞噬敌方增益', () => {
+    const attacker = createTestSpirit({ id: 'blackhole' })
+    const defender = createTestSpirit()
+    
+    // 给敌方添加增益
+    defender.buffs.push({
+      effect: {
+        type: 'attack_up',
+        probability: 1.0,
+        duration: 3,
+        value: 0.3,
+        description: '攻击 +30%',
+      },
+      remainingTurns: 3,
+      stackable: false,
+    })
+    
+    const swallowed = blackHoleSwallow(attacker, defender)
+    
+    expect(swallowed).toBe(1)
+    expect(defender.buffs.length).toBe(0)
+    expect(attacker.buffs.length).toBe(1)
+    expect(attacker.swallowStacks).toBe(1)
+  })
+  
+  it('无增益可吞噬', () => {
+    const attacker = createTestSpirit({ id: 'blackhole' })
+    const defender = createTestSpirit()
+    
+    const swallowed = blackHoleSwallow(attacker, defender)
+    
+    expect(swallowed).toBe(0)
+  })
+  
+  it('黑洞层数加成', () => {
+    expect(getBlackHoleBonus(0)).toEqual({ attack: 0, defense: 0 })
+    expect(getBlackHoleBonus(1)).toEqual({ attack: 0.1, defense: 0 })
+    expect(getBlackHoleBonus(2)).toEqual({ attack: 0.2, defense: 0 })
+    expect(getBlackHoleBonus(3)).toEqual({ attack: 0.3, defense: 0.1 })
+    expect(getBlackHoleBonus(4)).toEqual({ attack: 0.4, defense: 0.2 })
+    expect(getBlackHoleBonus(5)).toEqual({ attack: 0.5, defense: 0.3 })
+  })
+})
+
+describe('P2-6: 混沌随机机制', () => {
+  it('掷骰子 1-6 点', () => {
+    const spirit = createTestSpirit({ id: 'cosmos' })
+    
+    for (let i = 0; i < 100; i++) {
+      const dice = rollChaosDice(spirit)
+      expect(dice).toBeGreaterThanOrEqual(1)
+      expect(dice).toBeLessThanOrEqual(6)
+    }
+  })
+  
+  it('幸运值增加（掷出 1 点）', () => {
+    const spirit = createTestSpirit({ id: 'cosmos', chaosLuck: 0 })
+    updateChaosLuck(spirit, 1)
+    expect(spirit.chaosLuck).toBe(10)
+  })
+  
+  it('幸运值减少（掷出 6 点）', () => {
+    const spirit = createTestSpirit({ id: 'cosmos', chaosLuck: 50 })
+    updateChaosLuck(spirit, 6)
+    expect(spirit.chaosLuck).toBe(30)
+  })
+  
+  it('混沌倍率', () => {
+    expect(getChaosMultiplier(1)).toBe(0)
+    expect(getChaosMultiplier(2)).toBe(0.5)
+    expect(getChaosMultiplier(3)).toBe(0.8)
+    expect(getChaosMultiplier(4)).toBe(1.0)
+    expect(getChaosMultiplier(5)).toBe(1.5)
+    expect(getChaosMultiplier(6)).toBe(2.0)
   })
 })

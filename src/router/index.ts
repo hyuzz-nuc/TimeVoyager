@@ -137,6 +137,15 @@ const routes: RouteRecordRaw[] = [
       requiresAuth: false,
     },
   },
+  {
+    path: '/evolution-test',
+    name: 'evolution-test',
+    component: () => import('@/views/EvolutionTestView.vue'),
+    meta: { 
+      title: '进化弹窗测试',
+      requiresAuth: false,
+    },
+  },
 ]
 
 const router = createRouter({

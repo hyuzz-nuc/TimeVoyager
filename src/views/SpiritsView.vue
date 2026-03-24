@@ -62,6 +62,17 @@
           >
             {{ stageLabel(stage) }}
           </v-chip>
+          
+          <!-- 可进化提示 -->
+          <v-chip
+            v-if="canEvolveSpirit(spirit.id)"
+            color="accent"
+            size="x-small"
+            variant="tonal"
+            class="evolve-chip"
+          >
+            ⚡ 进化
+          </v-chip>
         </div>
         
         <!-- 未解锁显示解锁条件 -->
@@ -70,6 +81,14 @@
         </div>
       </div>
     </div>
+    
+    <!-- 进化弹窗 -->
+    <EvolutionModal
+      :visible="showEvolutionModal"
+      :spirits="canEvolveSpirits"
+      @close="showEvolutionModal = false"
+      @evolve="handleEvolve"
+    />
     
     <!-- 新手引导 - 初始星灵领取 -->
     <v-dialog v-model="showInitialSpiritDialog" max-width="400" persistent>
@@ -113,16 +132,49 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useSpiritStore } from '@/stores/spirits'
+import { useSpiritStore, type Spirit, type SpiritStage, STAGE_LEVELS } from '@/stores/spirits'
 import { useAuthStore } from '@/stores/auth'
+import EvolutionModal from './EvolutionModal.vue'
 
 const router = useRouter()
 const spiritStore = useSpiritStore()
 const authStore = useAuthStore()
 
 spiritStore.loadSpirits()
+
+// 进化弹窗
+const showEvolutionModal = ref(false)
+
+// 可进化的星灵
+const canEvolveSpirits = computed(() => {
+  return spiritStore.spirits.filter(spirit => {
+    const evolutionOrder: SpiritStage[] = ['seed', 'grow', 'mature', 'cosmic']
+    const currentIndex = evolutionOrder.indexOf(spirit.stage)
+    return currentIndex < evolutionOrder.length - 1 && 
+           spirit.level >= STAGE_LEVELS[spirit.stage][1]
+  })
+})
+
+// 检查星灵是否可以进化
+function canEvolveSpirit(spiritId: string): boolean {
+  const spirit = spiritStore.spirits.find(s => s.id === spiritId)
+  if (!spirit) return false
+  
+  const evolutionOrder: SpiritStage[] = ['seed', 'grow', 'mature', 'cosmic']
+  const currentIndex = evolutionOrder.indexOf(spirit.stage)
+  return currentIndex < evolutionOrder.length - 1 && 
+         spirit.level >= STAGE_LEVELS[spirit.stage][1]
+}
+
+// 处理进化
+function handleEvolve(spirit: Spirit) {
+  console.log('进化星灵:', spirit)
+  // TODO: 调用进化 API
+  // spiritStore.evolveSpirit(spirit.id)
+  showEvolutionModal.value = false
+}
 
 // 初始星灵选择
 const showInitialSpiritDialog = ref(false)
