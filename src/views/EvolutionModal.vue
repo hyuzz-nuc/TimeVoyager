@@ -96,27 +96,52 @@
         </div>
       </div>
 
-      <!-- 进化材料（简化版） -->
+      <!-- 进化材料 -->
       <div class="evolution-materials">
         <h3 class="materials-title">所需材料</h3>
         <div class="materials-list">
-          <div class="material-item">
+          <div class="material-item" :class="{ 'not-enough': !canAffordMaterial('evolutionStone') }">
             <div class="material-icon">💎</div>
             <div class="material-info">
               <div class="material-name">进化石</div>
-              <div class="material-amount">×10</div>
+              <div class="material-amount">×{{ evolutionCost?.evolutionStone || 0 }}</div>
             </div>
-            <div class="material-status owned">✓ 拥有</div>
+            <div class="material-status" :class="{ owned: hasMaterial('evolutionStone') }">
+              {{ hasMaterial('evolutionStone') ? '✓' : '✕' }} {{ spiritStore.materials.evolutionStone }}
+            </div>
           </div>
-          <div class="material-item">
+          <div class="material-item" :class="{ 'not-enough': !canAffordMaterial('crystals') }">
             <div class="material-icon">✨</div>
             <div class="material-info">
               <div class="material-name">星能晶体</div>
-              <div class="material-amount">×500</div>
+              <div class="material-amount">×{{ evolutionCost?.crystals || 0 }}</div>
             </div>
-            <div class="material-status owned">✓ 拥有</div>
+            <div class="material-status" :class="{ owned: hasMaterial('crystals') }">
+              {{ hasMaterial('crystals') ? '✓' : '✕' }} {{ spiritStore.materials.crystals }}
+            </div>
+          </div>
+          <div v-if="evolutionCost?.essence" class="material-item" :class="{ 'not-enough': !canAffordMaterial('essence') }">
+            <div class="material-icon">🌟</div>
+            <div class="material-info">
+              <div class="material-name">属性精华</div>
+              <div class="material-amount">×{{ evolutionCost.essence }}</div>
+            </div>
+            <div class="material-status" :class="{ owned: hasMaterial('essence') }">
+              {{ hasMaterial('essence') ? '✓' : '✕' }} {{ spiritStore.materials.essence }}
+            </div>
+          </div>
+          <div v-if="evolutionCost?.legendFragment" class="material-item" :class="{ 'not-enough': !canAffordMaterial('legendFragment') }">
+            <div class="material-icon">💎</div>
+            <div class="material-info">
+              <div class="material-name">传说碎片</div>
+              <div class="material-amount">×{{ evolutionCost.legendFragment }}</div>
+            </div>
+            <div class="material-status" :class="{ owned: hasMaterial('legendFragment') }">
+              {{ hasMaterial('legendFragment') ? '✓' : '✕' }} {{ spiritStore.materials.legendFragment }}
+            </div>
           </div>
         </div>
+        <div v-if="evolutionError" class="error-message">⚠️ {{ evolutionError }}</div>
       </div>
 
       <!-- 底部按钮 -->
@@ -127,7 +152,7 @@
         </button>
         <button class="btn btn-evolve" @click="handleEvolve" :disabled="!canEvolve">
           <span class="btn-icon">⚡</span>
-          {{ canEvolve ? '开始进化' : '等级不足' }}
+          {{ canEvolve ? (materialsEnough ? '开始进化' : '材料不足') : '等级不足' }}
           <div class="btn-glow"></div>
         </button>
       </div>
@@ -165,6 +190,8 @@
 import { ref, computed, watch } from 'vue'
 import type { Spirit, SpiritStage } from '@/stores/spirits'
 import { STAGE_NAMES, STAGE_LEVELS } from '@/stores/spirits'
+import { getEvolutionCost, getNextStage } from '@/data/evolution'
+import { useSpiritStore } from '@/stores/spirits'
 
 interface Props {
   visible: boolean
@@ -177,9 +204,11 @@ const emit = defineEmits<{
   evolve: [spirit: Spirit]
 }>()
 
+const spiritStore = useSpiritStore()
 const spiritIndex = ref(0)
 const isEvolving = ref(false)
 const evolutionComplete = ref(false)
+const evolutionError = ref<string | null>(null)
 
 // 可以进化的星灵
 const canEvolveSpirits = computed(() => {
@@ -197,7 +226,24 @@ const spirit = computed(() => {
 
 // 是否可以进化
 const canEvolve = computed(() => {
-  return spirit.value !== null
+  return spirit.value !== null && materialsEnough.value
+})
+
+// 材料是否足够
+const materialsEnough = computed(() => {
+  if (!evolutionCost.value) return false
+  return (
+    spiritStore.materials.evolutionStone >= evolutionCost.value.evolutionStone &&
+    spiritStore.materials.crystals >= evolutionCost.value.crystals &&
+    (!evolutionCost.value.essence || spiritStore.materials.essence >= evolutionCost.value.essence) &&
+    (!evolutionCost.value.legendFragment || spiritStore.materials.legendFragment >= evolutionCost.value.legendFragment)
+  )
+})
+
+// 进化消耗
+const evolutionCost = computed(() => {
+  if (!spirit.value) return null
+  return getEvolutionCost(spirit.value.stage)
 })
 
 // 经验进度
@@ -286,6 +332,20 @@ function getStageMaxLevel(stage: SpiritStage): number {
   return STAGE_LEVELS[stage][1]
 }
 
+// 材料检查
+function hasMaterial(type: string): boolean {
+  if (!evolutionCost.value) return false
+  if (type === 'evolutionStone') return spiritStore.materials.evolutionStone >= (evolutionCost.value.evolutionStone || 0)
+  if (type === 'crystals') return spiritStore.materials.crystals >= (evolutionCost.value.crystals || 0)
+  if (type === 'essence') return spiritStore.materials.essence >= (evolutionCost.value.essence || 0)
+  if (type === 'legendFragment') return spiritStore.materials.legendFragment >= (evolutionCost.value.legendFragment || 0)
+  return false
+}
+
+function canAffordMaterial(type: string): boolean {
+  return hasMaterial(type)
+}
+
 // 重置动画
 function resetAnimation() {
   isEvolving.value = false
@@ -301,12 +361,21 @@ function handleCancel() {
 function handleEvolve() {
   if (!spirit.value || !canEvolve.value) return
   
+  evolutionError.value = null
   isEvolving.value = true
+  
+  // 调用进化 API
+  const result = spiritStore.evolveSpirit(spirit.value.id)
   
   // 模拟进化动画（2 秒）
   setTimeout(() => {
     isEvolving.value = false
-    evolutionComplete.value = true
+    
+    if (result.success) {
+      evolutionComplete.value = true
+    } else {
+      evolutionError.value = result.error || '进化失败'
+    }
   }, 2000)
 }
 

@@ -4,6 +4,7 @@
 
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { getEvolutionCost, getNextStage, canAffordEvolution, deductMaterials } from '@/data/evolution'
 
 export interface Spirit {
   id: string
@@ -14,6 +15,14 @@ export interface Spirit {
   stage: SpiritStage
   obtainedAt: number
   favorite: boolean
+}
+
+// 材料库存
+export interface MaterialInventory {
+  evolutionStone: number
+  crystals: number
+  essence: number
+  legendFragment: number
 }
 
 export type SpiritStage = 'seed' | 'grow' | 'mature' | 'cosmic'
@@ -38,6 +47,14 @@ export const useSpiritStore = defineStore('spirits', () => {
   // State
   const spirits = ref<Spirit[]>([])
   const unlockedIds = ref<Set<string>>(new Set())
+  
+  // 材料库存
+  const materials = ref<MaterialInventory>({
+    evolutionStone: 100,    // 初始赠送 100 个进化石
+    crystals: 10000,        // 初始赠送 10000 晶体
+    essence: 50,            // 初始赠送 50 个精华
+    legendFragment: 5,      // 初始赠送 5 个传说碎片
+  })
   
   // 星灵图鉴数据（19 种基础星灵）
   const spiritTypes = ref([
@@ -189,11 +206,83 @@ export const useSpiritStore = defineStore('spirits', () => {
     return STAGE_NAMES[stage]
   }
   
-  // 检查是否可以进化到下一阶段
+  // 检查是否可以进化
   function canEvolve(spirit: Spirit): boolean {
-    const evolutionOrder: SpiritStage[] = ['seed', 'grow', 'mature', 'cosmic']
-    const currentIndex = evolutionOrder.indexOf(spirit.stage)
-    return currentIndex < evolutionOrder.length - 1 && spirit.level >= STAGE_LEVELS[spirit.stage][1]
+    const currentIndex = EVOLUTION_ORDER.indexOf(spirit.stage)
+    return currentIndex < EVOLUTION_ORDER.length - 1 && spirit.level >= STAGE_LEVELS[spirit.stage][1]
+  }
+  
+  // 检查材料是否足够进化
+  function canAffordEvolutionFor(spirit: Spirit): boolean {
+    const cost = getEvolutionCost(spirit.stage)
+    if (!cost) return false
+    return canAffordEvolution(materials.value, cost)
+  }
+  
+  // 获取进化所需材料
+  function getEvolutionCostFor(spirit: Spirit) {
+    return getEvolutionCost(spirit.stage)
+  }
+  
+  // 执行进化
+  function evolveSpirit(spiritId: string): { success: boolean; error?: string } {
+    const spirit = spirits.value.find(s => s.id === spiritId)
+    if (!spirit) {
+      return { success: false, error: '星灵不存在' }
+    }
+    
+    // 检查是否可以进化
+    if (!canEvolve(spirit)) {
+      return { success: false, error: '等级不足，无法进化' }
+    }
+    
+    // 检查材料
+    const cost = getEvolutionCost(spirit.stage)
+    if (!cost) {
+      return { success: false, error: '无法获取进化消耗' }
+    }
+    
+    if (!canAffordEvolution(materials.value, cost)) {
+      return { success: false, error: '材料不足' }
+    }
+    
+    // 扣除材料
+    materials.value = deductMaterials(materials.value, cost)
+    
+    // 阶段进化
+    const nextStage = getNextStage(spirit.stage)
+    if (nextStage) {
+      spirit.stage = nextStage
+      // 重置等级到下一阶段起始等级（可选）
+      // spirit.level = STAGE_LEVELS[nextStage][0]
+    }
+    
+    saveSpirits()
+    saveMaterials()
+    
+    return { success: true }
+  }
+  
+  // 保存材料
+  function saveMaterials() {
+    localStorage.setItem('timevoyager_materials', JSON.stringify(materials.value))
+  }
+  
+  // 加载材料
+  function loadMaterials() {
+    const saved = localStorage.getItem('timevoyager_materials')
+    if (saved) {
+      materials.value = JSON.parse(saved)
+    }
+  }
+  
+  // 添加材料（测试用）
+  function addMaterials(delta: Partial<MaterialInventory>) {
+    if (delta.evolutionStone) materials.value.evolutionStone += delta.evolutionStone
+    if (delta.crystals) materials.value.crystals += delta.crystals
+    if (delta.essence) materials.value.essence += delta.essence
+    if (delta.legendFragment) materials.value.legendFragment += delta.legendFragment
+    saveMaterials()
   }
   
   return {
@@ -201,6 +290,7 @@ export const useSpiritStore = defineStore('spirits', () => {
     spirits,
     unlockedIds,
     spiritTypes,
+    materials,
     
     // Getters
     collectedCount,
@@ -219,5 +309,12 @@ export const useSpiritStore = defineStore('spirits', () => {
     hasSpirit,
     getSpiritName,
     getSpiritElement,
+    canEvolve,
+    canAffordEvolutionFor,
+    getEvolutionCostFor,
+    evolveSpirit,
+    loadMaterials,
+    saveMaterials,
+    addMaterials,
   }
 })
