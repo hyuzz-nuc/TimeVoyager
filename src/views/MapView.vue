@@ -29,20 +29,26 @@
               }"
               @click="handleTileClick(tile)"
             >
-              <v-icon
-                :icon="getTileIcon(tile.type)"
-                :color="getTileColor(tile)"
-                size="20"
+              <!-- 像素素材 -->
+              <img 
+                :src="getTileImage(tile.type)" 
+                :alt="getTileName(tile.type)"
+                class="tile-image"
               />
               
               <!-- 奖励提示 -->
               <div v-if="tile.hasReward && tile.unlocked" class="reward-indicator">
-                <v-icon icon="mdi-gift" size="12" color="accent" />
+                <img src="/src/assets/pixel/icons/crystal_small.png" alt="奖励" class="reward-icon" />
               </div>
               
               <!-- 未解锁遮罩 -->
               <div v-if="!tile.unlocked" class="tile-lock">
-                <v-icon icon="mdi-lock" size="12" color="grey" />
+                <img src="/src/assets/pixel/icons/lock.png" alt="锁定" class="lock-icon" />
+              </div>
+              
+              <!-- 玩家位置标记 -->
+              <div v-if="tile.x === mapStore.currentPos.x && tile.y === mapStore.currentPos.y" class="player-marker">
+                <img src="/src/assets/pixel/icons/player_marker.png" alt="玩家" class="marker-icon" />
               </div>
             </div>
           </div>
@@ -173,7 +179,35 @@ const gridStyle = computed(() => {
 const showRewardDialog = ref(false)
 const rewardAmount = ref(0)
 
-// 获取格子图标
+// 获取格子图片
+const getTileImage = (type: string) => {
+  const imageMap: Record<string, string> = {
+    'base': '/src/assets/pixel/tiles/tile_base.png',
+    'shop': '/src/assets/pixel/tiles/tile_shop.png',
+    'arena': '/src/assets/pixel/tiles/tile_arena.png',
+    'empty_space': '/src/assets/pixel/tiles/tile_empty_space.png',
+    'nebula_purple': '/src/assets/pixel/tiles/tile_nebula_purple.png',
+    'nebula_blue': '/src/assets/pixel/tiles/tile_nebula_blue.png',
+    'nebula_pink': '/src/assets/pixel/tiles/tile_nebula_pink.png',
+    'asteroid_small': '/src/assets/pixel/tiles/tile_asteroid_small.png',
+    'asteroid_large': '/src/assets/pixel/tiles/tile_asteroid_large.png',
+    'planet_rocky': '/src/assets/pixel/tiles/tile_planet_rocky.png',
+    'planet_ice': '/src/assets/pixel/tiles/tile_planet_ice.png',
+    'planet_lava': '/src/assets/pixel/tiles/tile_planet_lava.png',
+    'planet_green': '/src/assets/pixel/tiles/tile_planet_green.png',
+    'comet': '/src/assets/pixel/tiles/tile_comet.png',
+    'comet_trail': '/src/assets/pixel/tiles/tile_comet_trail.png',
+    'blackhole': '/src/assets/pixel/tiles/tile_blackhole.png',
+    'station': '/src/assets/pixel/tiles/tile_station.png',
+    'stargate': '/src/assets/pixel/tiles/tile_stargate.png',
+    'observation': '/src/assets/pixel/tiles/tile_observation.png',
+    'temple': '/src/assets/pixel/tiles/tile_temple.png',
+    'bank': '/src/assets/pixel/tiles/tile_bank.png',
+  }
+  return imageMap[type] || '/src/assets/pixel/tiles/tile_empty_space.png'
+}
+
+// 获取格子图标（备用）
 const getTileIcon = (type: string) => {
   const iconMap: Record<string, string> = {
     'base': 'mdi-home',
@@ -366,6 +400,18 @@ onMounted(() => {
   position: relative;
   transition: all var(--transition-fast);
   cursor: pointer;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.tile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 .map-tile.tile-unlocked {
@@ -396,18 +442,64 @@ onMounted(() => {
 
 .tile-lock {
   position: absolute;
-  bottom: 2px;
-  right: 2px;
-  background: var(--bg-card);
-  border-radius: 50%;
-  padding: 2px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+}
+
+.lock-icon {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
 }
 
 .reward-indicator {
   position: absolute;
   top: 2px;
   right: 2px;
+  z-index: 1;
   animation: bounce 1s infinite;
+}
+
+.reward-icon {
+  width: 12px;
+  height: 12px;
+  image-rendering: pixelated;
+}
+
+.player-marker {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 24px;
+  height: 24px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.marker-icon {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 4px var(--primary));
+  animation: marker-pulse 1.5s infinite;
+}
+
+@keyframes marker-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
 }
 
 @keyframes pulse {
