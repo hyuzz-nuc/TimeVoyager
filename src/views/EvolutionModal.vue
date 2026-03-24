@@ -101,7 +101,7 @@
         <h3 class="materials-title">所需材料</h3>
         <div class="materials-list">
           <div class="material-item" :class="{ 'not-enough': !canAffordMaterial('evolutionStone') }">
-            <div class="material-icon">💎</div>
+            <img src="../assets/pixel/items/evolution_stone.png" alt="进化石" class="material-icon-img" />
             <div class="material-info">
               <div class="material-name">进化石</div>
               <div class="material-amount">×{{ evolutionCost?.evolutionStone || 0 }}</div>
@@ -111,7 +111,7 @@
             </div>
           </div>
           <div class="material-item" :class="{ 'not-enough': !canAffordMaterial('crystals') }">
-            <div class="material-icon">✨</div>
+            <img src="../assets/pixel/items/crystal.png" alt="星能晶体" class="material-icon-img" />
             <div class="material-info">
               <div class="material-name">星能晶体</div>
               <div class="material-amount">×{{ evolutionCost?.crystals || 0 }}</div>
@@ -121,7 +121,7 @@
             </div>
           </div>
           <div v-if="evolutionCost?.essence" class="material-item" :class="{ 'not-enough': !canAffordMaterial('essence') }">
-            <div class="material-icon">🌟</div>
+            <img src="../assets/pixel/items/essence.png" alt="属性精华" class="material-icon-img" />
             <div class="material-info">
               <div class="material-name">属性精华</div>
               <div class="material-amount">×{{ evolutionCost.essence }}</div>
@@ -131,7 +131,7 @@
             </div>
           </div>
           <div v-if="evolutionCost?.legendFragment" class="material-item" :class="{ 'not-enough': !canAffordMaterial('legendFragment') }">
-            <div class="material-icon">💎</div>
+            <img src="../assets/pixel/items/legend_fragment.png" alt="传说碎片" class="material-icon-img" />
             <div class="material-info">
               <div class="material-name">传说碎片</div>
               <div class="material-amount">×{{ evolutionCost.legendFragment }}</div>
@@ -833,6 +833,14 @@ watch(() => props.visible, (newVal) => {
 
 .material-icon {
   font-size: 24px;
+}
+
+.material-icon-img {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 .material-info {
