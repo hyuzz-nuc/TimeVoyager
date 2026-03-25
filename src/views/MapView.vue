@@ -71,22 +71,12 @@
         
         <div class="action-buttons">
           <v-btn
-            color="primary"
-            variant="tonal"
-            :disabled="!currentTile || currentTile.explored"
-            @click="exploreTile"
-          >
-            <v-icon icon="mdi-magnify" class="mr-2" />
-            探索
-          </v-btn>
-          
-          <v-btn
             color="secondary"
             variant="outlined"
             @click="resetMap"
           >
             <v-icon icon="mdi-refresh" class="mr-2" />
-            重置
+            重置地图
           </v-btn>
         </div>
       </v-card-text>
@@ -112,41 +102,6 @@
       </v-card>
     </v-dialog>
 
-    <!-- 图例 -->
-    <v-card class="legend-card" elevation="2">
-      <v-card-title class="card-title">
-        <v-icon icon="mdi-map-legend" class="mr-2" />
-        图例
-      </v-card-title>
-      <v-card-text>
-        <div class="legend-grid">
-          <div class="legend-item">
-            <v-icon icon="mdi-home" color="primary" size="20" />
-            <span>基地</span>
-          </div>
-          <div class="legend-item">
-            <v-icon icon="mdi-store" color="secondary" size="20" />
-            <span>商店</span>
-          </div>
-          <div class="legend-item">
-            <v-icon icon="mdi-sword" color="error" size="20" />
-            <span>竞技场</span>
-          </div>
-          <div class="legend-item">
-            <v-icon icon="mdi-planet" color="success" size="20" />
-            <span>行星</span>
-          </div>
-          <div class="legend-item">
-            <v-icon icon="mdi-weather-cloudy" color="info" size="20" />
-            <span>星云</span>
-          </div>
-          <div class="legend-item">
-            <v-icon icon="mdi-lock" color="grey" size="20" />
-            <span>未解锁</span>
-          </div>
-        </div>
-      </v-card-text>
-    </v-card>
     <!-- 图例 -->
     <v-card class="legend-card" elevation="2">
       <v-card-title class="card-title">
@@ -316,24 +271,33 @@ const canMoveTo = (tile: MapTile) => {
 
 // 处理格子点击
 const handleTileClick = (tile: MapTile) => {
+  const isAdj = isAdjacent(tile)
+  
   if (!tile.unlocked) {
-    // 未解锁，检查是否相邻
-    if (isAdjacent(tile)) {
-      // 相邻，可以探索解锁
+    // 未解锁
+    if (isAdj) {
+      // 相邻，直接探索解锁
       exploreAndUnlock(tile)
     } else {
-      alert('只能探索相邻的格子哦！')
+      // 不相邻，提示
+      alert(`太远了！只能探索相邻的格子\n当前：(${mapStore.currentPos.x}, ${mapStore.currentPos.y})\n目标：(${tile.x}, ${tile.y})`)
     }
     return
   }
   
-  // 已解锁，尝试移动
-  const success = mapStore.move(tile.x, tile.y)
-  if (success) {
-    // 移动成功后自动探索
-    setTimeout(() => {
-      exploreTile()
-    }, 300)
+  // 已解锁
+  if (isAdj) {
+    // 相邻，直接移动
+    const success = mapStore.move(tile.x, tile.y)
+    if (success) {
+      // 移动成功后自动探索
+      setTimeout(() => {
+        exploreTile()
+      }, 300)
+    }
+  } else {
+    // 不相邻，仅显示信息（不移动）
+    // 可以通过长按或者其他方式查看远处格子信息
   }
 }
 

@@ -74,11 +74,22 @@ export default defineConfig({
     port: 5173,
     open: false
   },
+  // 转译 Vuetify（解决 Array.at() 兼容性问题）
+  optimizeDeps: {
+    include: ['vuetify']
+  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
     target: 'esnext',
     minify: 'terser',
-    chunkSizeWarningLimit: 1000
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vuetify': ['vuetify']
+        }
+      }
+    }
   }
 })
