@@ -88,21 +88,21 @@
     </v-card>
 
     <!-- 探索奖励弹窗 -->
-    <v-dialog v-model="showRewardDialog" max-width="350" persistent>
+    <v-dialog v-model="showRewardDialog" max-width="300" persistent>
       <v-card>
         <v-card-title class="text-center">
           <v-icon icon="mdi-gift" color="accent" size="48" class="mb-2" />
           <div class="text-h6">探索奖励!</div>
         </v-card-title>
         <v-card-text class="text-center">
-          <p class="mb-2">发现宝藏！</p>
+          <p class="mb-2">发现星能晶体！</p>
           <div class="reward-amount">
-            <img src="/src/assets/pixel/currency/crystal_amber.png" alt="时光精粹" class="reward-icon" />
-            <span class="essence-reward">+{{ rewardAmount }} 时光精粹</span>
+            <img src="/src/assets/pixel/currency/crystal_amber.png" alt="星能晶体" class="reward-icon" style="filter: hue-rotate(45deg);" />
+            <span class="crystal-reward">+{{ rewardAmount }} 星能晶体</span>
           </div>
           <div class="reward-amount mt-2">
-            <img src="/src/assets/pixel/currency/crystal_amber.png" alt="星能晶体" class="reward-icon" style="filter: hue-rotate(45deg);" />
-            <span class="crystal-reward">+{{ Math.floor(rewardAmount / 3) }} 星能晶体</span>
+            <v-icon icon="mdi-star" color="warning" size="24" />
+            <span class="exp-reward">+10 经验值</span>
           </div>
         </v-card-text>
         <v-card-actions class="justify-center">
@@ -351,15 +351,13 @@ const exploreTile = (tile?: MapTile) => {
   
   const success = mapStore.exploreCurrentTile()
   if (success && current.hasReward) {
-    // 随机奖励：时光精粹 + 星能晶体
-    const essenceReward = Math.floor(Math.random() * 10) + 5  // 5-15 时光精粹
+    // 随机奖励：星能晶体 + 经验（不给时光精粹）
     const crystalReward = Math.floor(Math.random() * 3) + 1   // 1-3 星能晶体
     
-    authStore.addEssence(essenceReward)
     authStore.addCrystals(crystalReward)
-    authStore.addExp(5)  // 探索经验
+    authStore.addExp(10)  // 探索经验
     
-    rewardAmount.value = essenceReward
+    rewardAmount.value = crystalReward
     showRewardDialog.value = true
     current.hasReward = false
     mapStore.saveMap()
