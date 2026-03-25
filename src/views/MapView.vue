@@ -7,7 +7,7 @@
           Lv.{{ authStore.level }}
         </v-chip>
         <v-chip color="accent" size="small" variant="tonal">
-          ⚡ {{ energyStore.currentEnergy }}/{{ energyStore.MAX_ENERGY }}
+          �?{{ energyStore.currentEnergy }}/{{ energyStore.MAX_ENERGY }}
         </v-chip>
       </div>
     </div>
@@ -43,17 +43,17 @@
               
               <!-- 奖励提示 -->
               <div v-if="tile.hasReward && tile.unlocked" class="reward-indicator">
-                <img src="/src/assets/pixel/icons/crystal_small.png" alt="奖励" class="reward-icon" />
+                <img src="/assets/pixel/icons/crystal_small.png" alt="奖励" class="reward-icon" />
               </div>
               
-              <!-- 未解锁遮罩 -->
+              <!-- 未解锁遮�?-->
               <div v-if="!tile.unlocked" class="tile-lock">
-                <img src="/src/assets/pixel/icons/lock.png" alt="锁定" class="lock-icon" />
+                <img src="/assets/pixel/icons/lock.png" alt="锁定" class="lock-icon" />
               </div>
               
               <!-- 玩家位置标记 -->
               <div v-if="tile.x === mapStore.currentPos.x && tile.y === mapStore.currentPos.y" class="player-marker">
-                <img src="/src/assets/pixel/icons/player_marker.png" alt="玩家" class="marker-icon" />
+                <img src="/assets/pixel/icons/player_marker.png" alt="玩家" class="marker-icon" />
               </div>
             </div>
           </div>
@@ -70,7 +70,7 @@
             {{ getTileName(currentTile?.type || 'base') }}
           </div>
           <div class="tile-coords">
-            坐标：({{ mapStore.currentPos.x }}, {{ mapStore.currentPos.y }})
+            坐标�?{{ mapStore.currentPos.x }}, {{ mapStore.currentPos.y }})
           </div>
         </div>
         
@@ -95,18 +95,18 @@
           <div class="text-h6">探索奖励!</div>
         </v-card-title>
         <v-card-text class="text-center">
-          <p class="mb-2">发现星能晶体！</p>
+          <p class="mb-2">发现星能晶体�?/p>
           <div class="reward-amount">
-            <img src="/src/assets/pixel/currency/crystal_amber.png" alt="星能晶体" class="reward-icon" style="filter: hue-rotate(45deg);" />
+            <img src="/assets/pixel/currency/crystal_amber.png" alt="星能晶体" class="reward-icon" style="filter: hue-rotate(45deg);" />
             <span class="crystal-reward">+{{ rewardAmount }} 星能晶体</span>
           </div>
           <div class="reward-amount mt-2">
             <v-icon icon="mdi-star" color="warning" size="24" />
-            <span class="exp-reward">+10 经验值</span>
+            <span class="exp-reward">+10 经验�?/span>
           </div>
         </v-card-text>
         <v-card-actions class="justify-center">
-          <v-btn color="primary" @click="showRewardDialog = false">太棒了!</v-btn>
+          <v-btn color="primary" @click="showRewardDialog = false">太棒�?</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -120,32 +120,32 @@
       <v-card-text>
         <div class="legend-grid">
           <div class="legend-item">
-            <img src="/src/assets/pixel/tiles/tile_base.png" alt="基地" class="legend-icon" />
+            <img src="/assets/pixel/tiles/tile_base.png" alt="基地" class="legend-icon" />
             <span>基地</span>
           </div>
           <div class="legend-item">
-            <img src="/src/assets/pixel/tiles/tile_shop.png" alt="商店" class="legend-icon" />
+            <img src="/assets/pixel/tiles/tile_shop.png" alt="商店" class="legend-icon" />
             <span>商店</span>
           </div>
           <div class="legend-item">
-            <img src="/src/assets/pixel/tiles/tile_arena.png" alt="竞技场" class="legend-icon" />
-            <span>竞技场</span>
+            <img src="/assets/pixel/tiles/tile_arena.png" alt="竞技�? class="legend-icon" />
+            <span>竞技�?/span>
           </div>
           <div class="legend-item">
-            <img src="/src/assets/pixel/tiles/tile_nebula_purple.png" alt="星云" class="legend-icon" />
+            <img src="/assets/pixel/tiles/tile_nebula_purple.png" alt="星云" class="legend-icon" />
             <span>星云</span>
           </div>
           <div class="legend-item">
-            <img src="/src/assets/pixel/tiles/tile_asteroid_small.png" alt="小行星" class="legend-icon" />
-            <span>小行星</span>
+            <img src="/assets/pixel/tiles/tile_asteroid_small.png" alt="小行�? class="legend-icon" />
+            <span>小行�?/span>
           </div>
           <div class="legend-item">
-            <img src="/src/assets/pixel/tiles/tile_planet_rocky.png" alt="行星" class="legend-icon" />
+            <img src="/assets/pixel/tiles/tile_planet_rocky.png" alt="行星" class="legend-icon" />
             <span>行星</span>
           </div>
           <div class="legend-item">
             <v-icon icon="mdi-lock" color="grey" size="20" />
-            <span>未解锁</span>
+            <span>未解�?/span>
           </div>
         </div>
       </v-card-text>
@@ -163,9 +163,7 @@ const mapStore = useMapStore()
 const authStore = useAuthStore()
 const energyStore = useEnergyStore()
 
-// 探索消耗配置
-const EXPLORE_ENERGY_COST = 10  // 每次探索消耗体力
-const EXPLORE_BASE_LEVEL = 1    // 基础探索等级要求
+// 探索消耗配�?const EXPLORE_ENERGY_COST = 10  // 每次探索消耗体�?const EXPLORE_BASE_LEVEL = 1    // 基础探索等级要求
 
 // 当前格子
 const currentTile = computed(() => {
@@ -191,29 +189,29 @@ const rewardAmount = ref(0)
 // 获取格子图片
 const getTileImage = (type: string) => {
   const imageMap: Record<string, string> = {
-    'base': '/src/assets/pixel/tiles/tile_base.png',
-    'shop': '/src/assets/pixel/tiles/tile_shop.png',
-    'arena': '/src/assets/pixel/tiles/tile_arena.png',
-    'empty_space': '/src/assets/pixel/tiles/tile_empty_space.png',
-    'nebula_purple': '/src/assets/pixel/tiles/tile_nebula_purple.png',
-    'nebula_blue': '/src/assets/pixel/tiles/tile_nebula_blue.png',
-    'nebula_pink': '/src/assets/pixel/tiles/tile_nebula_pink.png',
-    'asteroid_small': '/src/assets/pixel/tiles/tile_asteroid_small.png',
-    'asteroid_large': '/src/assets/pixel/tiles/tile_asteroid_large.png',
-    'planet_rocky': '/src/assets/pixel/tiles/tile_planet_rocky.png',
-    'planet_ice': '/src/assets/pixel/tiles/tile_planet_ice.png',
-    'planet_lava': '/src/assets/pixel/tiles/tile_planet_lava.png',
-    'planet_green': '/src/assets/pixel/tiles/tile_planet_green.png',
-    'comet': '/src/assets/pixel/tiles/tile_comet.png',
-    'comet_trail': '/src/assets/pixel/tiles/tile_comet_trail.png',
-    'blackhole': '/src/assets/pixel/tiles/tile_blackhole.png',
-    'station': '/src/assets/pixel/tiles/tile_station.png',
-    'stargate': '/src/assets/pixel/tiles/tile_stargate.png',
-    'observation': '/src/assets/pixel/tiles/tile_observation.png',
-    'temple': '/src/assets/pixel/tiles/tile_temple.png',
-    'bank': '/src/assets/pixel/tiles/tile_bank.png',
+    'base': '/assets/pixel/tiles/tile_base.png',
+    'shop': '/assets/pixel/tiles/tile_shop.png',
+    'arena': '/assets/pixel/tiles/tile_arena.png',
+    'empty_space': '/assets/pixel/tiles/tile_empty_space.png',
+    'nebula_purple': '/assets/pixel/tiles/tile_nebula_purple.png',
+    'nebula_blue': '/assets/pixel/tiles/tile_nebula_blue.png',
+    'nebula_pink': '/assets/pixel/tiles/tile_nebula_pink.png',
+    'asteroid_small': '/assets/pixel/tiles/tile_asteroid_small.png',
+    'asteroid_large': '/assets/pixel/tiles/tile_asteroid_large.png',
+    'planet_rocky': '/assets/pixel/tiles/tile_planet_rocky.png',
+    'planet_ice': '/assets/pixel/tiles/tile_planet_ice.png',
+    'planet_lava': '/assets/pixel/tiles/tile_planet_lava.png',
+    'planet_green': '/assets/pixel/tiles/tile_planet_green.png',
+    'comet': '/assets/pixel/tiles/tile_comet.png',
+    'comet_trail': '/assets/pixel/tiles/tile_comet_trail.png',
+    'blackhole': '/assets/pixel/tiles/tile_blackhole.png',
+    'station': '/assets/pixel/tiles/tile_station.png',
+    'stargate': '/assets/pixel/tiles/tile_stargate.png',
+    'observation': '/assets/pixel/tiles/tile_observation.png',
+    'temple': '/assets/pixel/tiles/tile_temple.png',
+    'bank': '/assets/pixel/tiles/tile_bank.png',
   }
-  return imageMap[type] || '/src/assets/pixel/tiles/tile_empty_space.png'
+  return imageMap[type] || '/assets/pixel/tiles/tile_empty_space.png'
 }
 
 // 获取格子图标（备用）
@@ -241,13 +239,13 @@ const getTileName = (type: string) => {
   const nameMap: Record<string, string> = {
     'base': '玩家基地',
     'shop': '星能商店',
-    'arena': '对战竞技场',
+    'arena': '对战竞技�?,
     'empty_space': '空旷星空',
     'nebula_purple': '紫色星云',
     'nebula_blue': '蓝色星云',
     'nebula_pink': '粉色星云',
-    'asteroid_small': '小行星',
-    'asteroid_large': '大行星',
+    'asteroid_small': '小行�?,
+    'asteroid_large': '大行�?,
     'planet_rocky': '岩石行星',
     'planet_ice': '冰原行星',
     'planet_lava': '熔岩行星',
@@ -272,15 +270,13 @@ const getTileColor = (tile: MapTile) => {
   return colorMap[tile.type] || 'grey'
 }
 
-// 检查是否相邻
-const isAdjacent = (tile: MapTile) => {
+// 检查是否相�?const isAdjacent = (tile: MapTile) => {
   const dx = Math.abs(tile.x - mapStore.currentPos.x)
   const dy = Math.abs(tile.y - mapStore.currentPos.y)
   return dx + dy === 1
 }
 
-// 检查是否可以移动
-const canMoveTo = (tile: MapTile) => {
+// 检查是否可以移�?const canMoveTo = (tile: MapTile) => {
   return isAdjacent(tile) && tile.unlocked
 }
 
@@ -289,11 +285,10 @@ const handleTileClick = (tile: MapTile) => {
   const isAdj = isAdjacent(tile)
   
   if (!tile.unlocked) {
-    // 未解锁
-    if (isAdj) {
+    // 未解�?    if (isAdj) {
       // 检查体力和等级
       if (energyStore.currentEnergy < EXPLORE_ENERGY_COST) {
-        alert(`体力不足！\n需要：${EXPLORE_ENERGY_COST} 点\n当前：${energyStore.currentEnergy} 点\n\n体力每 5 分钟恢复 1 点`)
+        alert(`体力不足！\n需要：${EXPLORE_ENERGY_COST} 点\n当前�?{energyStore.currentEnergy} 点\n\n体力�?5 分钟恢复 1 点`)
         return
       }
       
@@ -302,22 +297,18 @@ const handleTileClick = (tile: MapTile) => {
         return
       }
       
-      // 相邻，直接探索解锁
-      exploreAndUnlock(tile)
+      // 相邻，直接探索解�?      exploreAndUnlock(tile)
     } else {
       // 不相邻，提示
-      alert(`太远了！只能探索相邻的格子\n当前：(${mapStore.currentPos.x}, ${mapStore.currentPos.y})\n目标：(${tile.x}, ${tile.y})`)
+      alert(`太远了！只能探索相邻的格子\n当前�?${mapStore.currentPos.x}, ${mapStore.currentPos.y})\n目标�?${tile.x}, ${tile.y})`)
     }
     return
   }
   
-  // 已解锁
-  if (isAdj) {
-    // 相邻，直接移动
-    const success = mapStore.move(tile.x, tile.y)
+  // 已解�?  if (isAdj) {
+    // 相邻，直接移�?    const success = mapStore.move(tile.x, tile.y)
     if (success) {
-      // 移动成功后自动探索
-      setTimeout(() => {
+      // 移动成功后自动探�?      setTimeout(() => {
         exploreTile()
       }, 300)
     }
@@ -326,20 +317,16 @@ const handleTileClick = (tile: MapTile) => {
   }
 }
 
-// 探索并解锁格子
-const exploreAndUnlock = (tile: MapTile) => {
-  // 消耗体力
-  energyStore.consumeEnergy(EXPLORE_ENERGY_COST)
+// 探索并解锁格�?const exploreAndUnlock = (tile: MapTile) => {
+  // 消耗体�?  energyStore.consumeEnergy(EXPLORE_ENERGY_COST)
   
-  // 增加经验值
-  authStore.addExp(10)
+  // 增加经验�?  authStore.addExp(10)
   
   tile.unlocked = true
   mapStore.exploredCount++
   mapStore.saveMap()
   
-  // 延迟后探索
-  setTimeout(() => {
+  // 延迟后探�?  setTimeout(() => {
     exploreTile(tile)
   }, 300)
 }
@@ -351,7 +338,7 @@ const exploreTile = (tile?: MapTile) => {
   
   const success = mapStore.exploreCurrentTile()
   if (success && current.hasReward) {
-    // 随机奖励：星能晶体 + 经验（不给时光精粹）
+    // 随机奖励：星能晶�?+ 经验（不给时光精粹）
     const crystalReward = Math.floor(Math.random() * 3) + 1   // 1-3 星能晶体
     
     authStore.addCrystals(crystalReward)
@@ -366,13 +353,12 @@ const exploreTile = (tile?: MapTile) => {
 
 // 重置地图
 const resetMap = () => {
-  if (confirm('确定要重置地图吗？进度将丢失！')) {
+  if (confirm('确定要重置地图吗？进度将丢失�?)) {
     mapStore.generateMap()
   }
 }
 
-// 初始化
-onMounted(() => {
+// 初始�?onMounted(() => {
   if (mapStore.tiles.length === 0) {
     mapStore.generateMap()
   }
@@ -618,3 +604,4 @@ onMounted(() => {
   image-rendering: pixelated;
 }
 </style>
+

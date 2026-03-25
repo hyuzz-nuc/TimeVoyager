@@ -71,39 +71,37 @@ const categories = [
 ]
 
 const shopItems = [
-  // 材料类 - 用时光精粹购买
-  {
+  // 材料�?- 用时光精粹购�?  {
     id: 'material_crystal',
     name: '星能晶体',
-    description: '高级货币，用于升级/进化星灵',
+    description: '高级货币，用于升�?进化星灵',
     price: 50,
     category: 'material',
-    imagePath: '/src/assets/pixel/currency/crystal_amber.png',
+    imagePath: '/assets/pixel/currency/crystal_amber.png',
   },
   {
     id: 'material_evolution_stone',
-    name: '进化石',
+    name: '进化�?,
     description: '进化星灵必备材料',
     price: 100,
     category: 'material',
-    imagePath: '/src/assets/pixel/items/evolution_stone.png',
+    imagePath: '/assets/pixel/items/evolution_stone.png',
   },
   {
     id: 'material_energy_pack',
     name: '体力药剂',
-    description: '恢复 50 点体力',
+    description: '恢复 50 点体�?,
     price: 30,
     category: 'material',
-    imagePath: '/src/assets/pixel/items/energy_pack.png',
+    imagePath: '/assets/pixel/items/energy_pack.png',
   },
-  // 治疗类
-  {
+  // 治疗�?  {
     id: 'potion_small',
     name: '小型治疗药水',
     description: '回复 30% HP',
     price: 50,
     category: 'item',
-    imagePath: '/src/assets/pixel/items/potion_small.png',
+    imagePath: '/assets/pixel/items/potion_small.png',
   },
   {
     id: 'potion_medium',
@@ -111,7 +109,7 @@ const shopItems = [
     description: '回复 50% HP',
     price: 100,
     category: 'item',
-    imagePath: '/src/assets/pixel/items/potion_medium.png',
+    imagePath: '/assets/pixel/items/potion_medium.png',
   },
   {
     id: 'potion_large',
@@ -119,66 +117,64 @@ const shopItems = [
     description: '回复 80% HP',
     price: 200,
     category: 'item',
-    imagePath: '/src/assets/pixel/items/potion_large.png',
+    imagePath: '/assets/pixel/items/potion_large.png',
   },
   // 状态解除类
   {
     id: 'antidote',
-    name: '解毒剂',
-    description: '解除中毒状态',
+    name: '解毒�?,
+    description: '解除中毒状�?,
     price: 30,
     category: 'item',
-    imagePath: '/src/assets/pixel/items/antidote.png',
+    imagePath: '/assets/pixel/items/antidote.png',
   },
   {
     id: 'awaken',
-    name: '清醒剂',
+    name: '清醒�?,
     description: '解除麻痹/眩晕',
     price: 40,
     category: 'item',
-    imagePath: '/src/assets/pixel/items/awaken.png',
+    imagePath: '/assets/pixel/items/awaken.png',
   },
-  // 增益类
-  {
+  // 增益�?  {
     id: 'attack_boost',
-    name: '攻击强化剂',
-    description: '攻击 +30%，3 回合',
+    name: '攻击强化�?,
+    description: '攻击 +30%�? 回合',
     price: 120,
     category: 'item',
-    imagePath: '/src/assets/pixel/items/attack_boost.png',
+    imagePath: '/assets/pixel/items/attack_boost.png',
   },
   {
     id: 'defense_boost',
-    name: '防御强化剂',
-    description: '防御 +30%，3 回合',
+    name: '防御强化�?,
+    description: '防御 +30%�? 回合',
     price: 120,
     category: 'item',
-    imagePath: '/src/assets/pixel/items/defense_boost.png',
+    imagePath: '/assets/pixel/items/defense_boost.png',
   },
   {
     id: 'speed_boost',
-    name: '速度强化剂',
-    description: '速度 +30%，3 回合',
+    name: '速度强化�?,
+    description: '速度 +30%�? 回合',
     price: 120,
     category: 'item',
-    imagePath: '/src/assets/pixel/items/speed_boost.png',
+    imagePath: '/assets/pixel/items/speed_boost.png',
   },
-  // 特殊类
-  {
+  // 特殊�?  {
     id: 'revive',
-    name: '复活药',
+    name: '复活�?,
     description: '复活 +50% HP',
     price: 1000,
     category: 'item',
-    imagePath: '/src/assets/pixel/items/revive.png',
+    imagePath: '/assets/pixel/items/revive.png',
   },
   {
     id: 'smoke_bomb',
-    name: '烟雾弹',
+    name: '烟雾�?,
     description: '100% 逃跑',
     price: 50,
     category: 'item',
-    imagePath: '/src/assets/pixel/items/smoke_bomb.png',
+    imagePath: '/assets/pixel/items/smoke_bomb.png',
   },
 ]
 
@@ -219,17 +215,15 @@ const getItemColor = (category: string) => {
 
 const buyItem = (item: any) => {
   if (authStore.spendEssence(item.price)) {
-    // 购买成功，发放物品
-    if (item.id === 'material_crystal') {
+    // 购买成功，发放物�?    if (item.id === 'material_crystal') {
       // 购买星能晶体
       authStore.addCrystals(1)
-      alert(`购买成功：${item.name} x1`)
+      alert(`购买成功�?{item.name} x1`)
     } else {
-      // 其他物品（待实现背包系统）
-      alert(`购买成功：${item.name}\n（背包系统开发中）`)
+      // 其他物品（待实现背包系统�?      alert(`购买成功�?{item.name}\n（背包系统开发中）`)
     }
   } else {
-    alert('时光精粹不足！')
+    alert('时光精粹不足�?)
   }
 }
 </script>
@@ -348,3 +342,4 @@ const buyItem = (item: any) => {
   color: var(--accent);
 }
 </style>
+

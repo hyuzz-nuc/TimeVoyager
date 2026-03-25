@@ -1,10 +1,10 @@
 <template>
   <div class="home-view">
-    <!-- 顶部问候 -->
+    <!-- 顶部问�?-->
     <div class="header safe-area-top">
       <div class="user-greeting">
         <h1 class="title">早安，{{ authStore.nickname }}</h1>
-        <p class="subtitle">专注即探索，时间换世界</p>
+        <p class="subtitle">专注即探索，时间换世�?/p>
       </div>
       <div class="essence-display" title="时光精粹">
         <v-icon icon="mdi-gem" color="amber" size="24" />
@@ -78,7 +78,7 @@
       <v-card-text>
         <div class="goal-item">
           <div class="goal-info">
-            <span class="goal-text">专注 4 次</span>
+            <span class="goal-text">专注 4 �?/span>
             <span class="goal-progress">2/4</span>
           </div>
           <v-progress-linear
@@ -101,8 +101,7 @@
         @click="$router.push('/timer')"
       >
         <v-icon icon="mdi-play" class="mr-2" />
-        开始专注
-      </v-btn>
+        开始专�?      </v-btn>
     </div>
 
     <!-- 星灵展示 -->
@@ -113,14 +112,14 @@
       </v-card-title>
       <v-card-text>
         <div v-if="spiritStore.isLoading" class="spirits-loading">
-          <LoadingState text="加载星灵中..." />
+          <LoadingState text="加载星灵�?.." />
         </div>
         <EmptyState
           v-else-if="spiritStore.collectedCount === 0"
           icon="mdi-star-outline"
-          title="还没有星灵"
-          description="完成新手引导或探索星域地图，获得你的第一只星灵吧！"
-          action-text="去探索"
+          title="还没有星�?
+          description="完成新手引导或探索星域地图，获得你的第一只星灵吧�?
+          action-text="去探�?
           action-color="primary"
           @action="$router.push('/map')"
         />
@@ -155,8 +154,7 @@ const authStore = useAuthStore()
 
 const username = computed(() => authStore.nickname)
 
-// 初始化加载数据
-authStore.initUser()
+// 初始化加载数�?authStore.initUser()
 userStore.loadUserData()
 spiritStore.loadSpirits()
 </script>
@@ -424,3 +422,4 @@ spiritStore.loadSpirits()
   color: var(--text-secondary);
 }
 </style>
+
