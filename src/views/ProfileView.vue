@@ -1,128 +1,127 @@
 <template>
   <div class="profile-view">
-    <h1 class="title">个人中心</h1>
-    
+    <div class="header safe-area-top">
+      <h1 class="title">个人中心</h1>
+    </div>
+
     <!-- 用户信息卡片 -->
     <v-card class="profile-card" elevation="2">
       <v-card-text>
         <div class="user-info">
           <div class="avatar">
-            <v-icon icon="mdi-account" size="64" color="primary" />
+            <v-icon icon="mdi-account-circle" size="80" color="primary" />
           </div>
           <div class="user-details">
-            <h2 class="username">{{ userStore.username }}</h2>
-            <div class="level-badge">
-              <span>Lv.{{ userStore.level }}</span>
-              <span class="level-title">{{ userStore.levelTitle }}</span>
+            <div class="nickname">{{ authStore.nickname }}</div>
+            <div class="level">Lv.{{ authStore.level }} - {{ levelStore.currentTitle }}</div>
+            <div class="exp-progress">
+              <v-progress-linear
+                :model-value="levelStore.expPercent"
+                color="primary"
+                height="6"
+                rounded
+              />
+              <div class="exp-text">{{ levelStore.exp }} / {{ levelStore.expNeeded }} 经验</div>
             </div>
           </div>
-        </div>
-        
-        <!-- 经验条 -->
-        <div class="exp-section">
-          <div class="exp-info">
-            <span>{{ userStore.exp }} / {{ userStore.maxExp }} EXP</span>
-            <span>{{ userStore.expProgress.toFixed(0) }}%</span>
-          </div>
-          <v-progress-linear
-            :model-value="userStore.expProgress"
-            color="primary"
-            height="8"
-            rounded
-          />
         </div>
       </v-card-text>
     </v-card>
 
     <!-- 货币统计 -->
-    <div class="currency-row">
-      <v-card class="currency-card" elevation="2">
-        <v-card-text>
-          <v-icon icon="mdi-gem" color="accent" size="32" />
-          <div class="currency-value">{{ userStore.crystals }}</div>
-          <div class="currency-label">星能晶体</div>
-        </v-card-text>
-      </v-card>
-      
-      <v-card class="currency-card" elevation="2">
-        <v-card-text>
-          <v-icon icon="mdi-coin" color="secondary" size="32" />
-          <div class="currency-value">{{ userStore.coins }}</div>
-          <div class="currency-label">金币</div>
-        </v-card-text>
-      </v-card>
-    </div>
-
-    <!-- 统计信息 -->
-    <v-card class="stats-card" elevation="2">
-      <v-card-title class="card-title">
-        <v-icon icon="mdi-chart-bar" class="mr-2" />
-        数据统计
-      </v-card-title>
+    <v-card class="currency-card" elevation="2">
       <v-card-text>
-        <div class="stats-list">
-          <div class="stat-row">
-            <span class="stat-label">总专注时长</span>
-            <span class="stat-value">{{ userStore.stats.totalFocusTime }} 分钟</span>
+        <div class="currency-grid">
+          <div class="currency-item">
+            <v-icon icon="mdi-gem" color="amber" size="32" />
+            <div class="currency-amount">{{ authStore.essence }}</div>
+            <div class="currency-label">时光精粹</div>
           </div>
-          <div class="stat-divider" />
-          <div class="stat-row">
-            <span class="stat-label">专注次数</span>
-            <span class="stat-value">{{ userStore.stats.totalSessions }}</span>
+          <div class="currency-divider" />
+          <div class="currency-item">
+            <v-icon icon="mdi-gem" size="32" style="filter: hue-rotate(45deg);" />
+            <div class="currency-amount">{{ authStore.crystals }}</div>
+            <div class="currency-label">星能晶体</div>
           </div>
-          <div class="stat-divider" />
-          <div class="stat-row">
-            <span class="stat-label">收集星灵</span>
-            <span class="stat-value">{{ spiritStore.collectedCount }}</span>
+          <div class="currency-divider" />
+          <div class="currency-item">
+            <v-icon icon="mdi-coin" color="yellow" size="32" />
+            <div class="currency-amount">{{ authStore.coins }}</div>
+            <div class="currency-label">金币</div>
           </div>
         </div>
       </v-card-text>
     </v-card>
 
-    <!-- 设置选项 -->
-    <v-card class="settings-card" elevation="2">
+    <!-- 体力状态 -->
+    <v-card class="energy-card" elevation="2">
       <v-card-title class="card-title">
-        <v-icon icon="mdi-cog" class="mr-2" />
-        设置
+        <v-icon icon="mdi-bolt" class="mr-2" />
+        体力状态
       </v-card-title>
       <v-card-text>
-        <v-list lines="two" variant="tonal">
-          <v-list-item>
-            <template v-slot:prepend>
-              <v-icon icon="mdi-bell" />
-            </template>
-            <v-list-item-title>通知提醒</v-list-item-title>
-            <v-list-item-subtitle>每日专注提醒</v-list-item-subtitle>
-            <template v-slot:append>
-              <v-switch v-model="userStore.settings.notifications" hide-details />
-            </template>
-          </v-list-item>
-          
-          <v-list-item>
-            <template v-slot:prepend>
-              <v-icon icon="mdi-volume-high" />
-            </template>
-            <v-list-item-title>音效</v-list-item-title>
-            <v-list-item-subtitle>播放提示音</v-list-item-subtitle>
-            <template v-slot:append>
-              <v-switch v-model="userStore.settings.sound" hide-details />
-            </template>
-          </v-list-item>
-        </v-list>
+        <div class="energy-info">
+          <div class="energy-value">{{ energyStore.currentEnergy }} / {{ energyStore.MAX_ENERGY }}</div>
+          <v-progress-linear
+            :model-value="energyStore.energyPercent"
+            color="accent"
+            height="8"
+            rounded
+          />
+          <div class="energy-recover">
+            <v-icon icon="mdi-clock-outline" size="16" />
+            <span>{{ energyStore.timeToFull }}恢复满</span>
+          </div>
+        </div>
+      </v-card-text>
+    </v-card>
+
+    <!-- 功能菜单 -->
+    <v-card class="menu-card" elevation="2">
+      <v-card-text>
+        <div class="menu-list">
+          <div class="menu-item" @click="$router.push('/settings')">
+            <v-icon icon="mdi-cog" color="primary" size="24" />
+            <span class="menu-label">设置</span>
+            <v-icon icon="mdi-chevron-right" color="grey" />
+          </div>
+          <div class="menu-item" @click="$router.push('/about')">
+            <v-icon icon="mdi-information" color="info" size="24" />
+            <span class="menu-label">关于</span>
+            <v-icon icon="mdi-chevron-right" color="grey" />
+          </div>
+          <div class="menu-item" @click="clearData">
+            <v-icon icon="mdi-delete" color="error" size="24" />
+            <span class="menu-label">清除数据</span>
+            <v-icon icon="mdi-chevron-right" color="grey" />
+          </div>
+        </div>
       </v-card-text>
     </v-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user'
-import { useSpiritStore } from '@/stores/spirits'
+import { onMounted } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useEnergyStore } from '@/stores/energy'
+import { useLevelStore } from '@/stores/level'
 
-const userStore = useUserStore()
-const spiritStore = useSpiritStore()
+const authStore = useAuthStore()
+const energyStore = useEnergyStore()
+const levelStore = useLevelStore()
 
-userStore.loadUserData()
-spiritStore.loadSpirits()
+// 初始化等级系统
+onMounted(() => {
+  levelStore.initLevel(authStore.level, authStore.exp)
+})
+
+const clearData = () => {
+  if (confirm('确定要清除所有数据吗？此操作不可恢复！')) {
+    localStorage.clear()
+    location.reload()
+  }
+}
 </script>
 
 <style scoped>
@@ -131,95 +130,78 @@ spiritStore.loadSpirits()
   padding-bottom: calc(var(--spacing-md) + var(--nav-height));
 }
 
-.title {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
+.header {
   margin-bottom: var(--spacing-lg);
 }
 
-.profile-card {
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+}
+
+.profile-card,
+.currency-card,
+.energy-card,
+.menu-card {
   margin-bottom: var(--spacing-md);
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 .user-info {
   display: flex;
-  flex-direction: column;
+  gap: var(--spacing-lg);
   align-items: center;
-  padding: var(--spacing-lg) 0;
 }
 
 .avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: var(--bg-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: var(--spacing-md);
+  flex-shrink: 0;
 }
 
 .user-details {
-  text-align: center;
+  flex: 1;
 }
 
-.username {
+.nickname {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-  margin: 0 0 var(--spacing-xs);
-}
-
-.level-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: 4px 12px;
-  background: var(--primary);
-  color: white;
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-}
-
-.level-title {
-  opacity: 0.9;
-  font-weight: var(--font-weight-normal);
-}
-
-.exp-section {
-  margin-top: var(--spacing-lg);
-  padding: 0 var(--spacing-lg);
-}
-
-.exp-info {
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--font-size-xs);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   margin-bottom: var(--spacing-xs);
 }
 
-.currency-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
+.level {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
 }
 
-.currency-card {
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+.exp-progress {
+  margin-top: var(--spacing-sm);
+}
+
+.exp-text {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+}
+
+.currency-grid {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.currency-item {
   text-align: center;
-  padding: var(--spacing-lg);
+  flex: 1;
 }
 
-.currency-value {
+.currency-amount {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
   margin-top: var(--spacing-xs);
 }
 
@@ -229,12 +211,10 @@ spiritStore.loadSpirits()
   margin-top: var(--spacing-xs);
 }
 
-.stats-card,
-.settings-card {
-  margin-bottom: var(--spacing-md);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+.currency-divider {
+  width: 1px;
+  height: 50px;
+  background: var(--border);
 }
 
 .card-title {
@@ -244,30 +224,56 @@ spiritStore.loadSpirits()
   padding-bottom: var(--spacing-sm) !important;
 }
 
-.stats-list {
-  margin-top: var(--spacing-sm);
-  padding: 0 var(--spacing-md);
-}
-
-.stat-row {
-  display: flex;
-  justify-content: space-between;
+.energy-info {
   padding: var(--spacing-sm) 0;
 }
 
-.stat-label {
+.energy-value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.energy-recover {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
   font-size: var(--font-size-sm);
   color: var(--text-secondary);
+  margin-top: var(--spacing-sm);
 }
 
-.stat-value {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+.menu-list {
+  display: flex;
+  flex-direction: column;
 }
 
-.stat-divider {
-  height: 1px;
-  background: var(--border);
-  margin: var(--spacing-xs) 0;
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-item:hover {
+  background: var(--bg-secondary);
+  padding-left: var(--spacing-sm);
+  padding-right: var(--spacing-sm);
+  margin: 0 calc(-1 * var(--spacing-sm));
+  border-radius: var(--radius-sm);
+}
+
+.menu-label {
+  flex: 1;
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
 }
 </style>

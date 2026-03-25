@@ -58,7 +58,7 @@
             </div>
             
             <div class="task-reward">
-              <img src="/src/assets/pixel/currency/crystal_amber.png" alt="晶体" class="reward-icon" />
+              <v-icon icon="mdi-gem" color="amber" size="20" />
               <span class="reward-value">+{{ task.reward }}</span>
             </div>
           </div>
@@ -195,8 +195,9 @@ const completionRate = computed(() => {
 const claimTask = (task: any) => {
   if (task.progress >= task.target && !task.completed) {
     task.completed = true
-    authStore.addCrystals(task.reward)
-    alert(`任务完成！获得 +${task.reward} 晶体`)
+    authStore.addEssence(task.reward)
+    alert(`任务完成！获得 +${task.reward} 时光精粹`)
+    saveTasks()
   }
 }
 
@@ -317,12 +318,6 @@ const saveTasks = () => {
   align-items: center;
   gap: var(--spacing-xs);
   flex-shrink: 0;
-}
-
-.reward-icon {
-  width: 20px;
-  height: 20px;
-  image-rendering: pixelated;
 }
 
 .reward-value {
