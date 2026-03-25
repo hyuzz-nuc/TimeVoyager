@@ -33,7 +33,7 @@
       >
         <v-card-text>
           <div class="item-icon">
-            <v-icon :icon="item.icon" size="40" :color="item.color" />
+            <img :src="item.imagePath" :alt="item.name" class="item-image" />
           </div>
           <div class="item-name">{{ item.name }}</div>
           <div class="item-desc">{{ item.description }}</div>
@@ -66,122 +66,111 @@ const currentCategory = ref('all')
 
 const categories = [
   { value: 'all', label: '全部' },
-  { value: 'spirit', label: '星灵' },
+  { value: 'material', label: '材料' },
   { value: 'item', label: '道具' },
-  { value: 'skin', label: '皮肤' },
 ]
 
 const shopItems = [
-  // 星灵类
+  // 材料类
   {
-    id: 'spirit_random',
-    name: '随机星灵',
-    description: '随机获得一只星灵',
-    price: 200,
-    category: 'spirit',
-    icon: 'mdi-star',
-    color: 'primary',
+    id: 'material_evolution_stone',
+    name: '进化石',
+    description: '进化星灵必备',
+    price: 50,
+    category: 'material',
+    imagePath: '/src/assets/pixel/items/evolution_stone.png',
   },
   {
-    id: 'spirit_fire',
-    name: '火之星灵',
-    description: '火焰属性的星灵',
-    price: 300,
-    category: 'spirit',
-    icon: 'mdi-fire',
-    color: 'red',
+    id: 'material_crystal',
+    name: '星能晶体',
+    description: '通用货币',
+    price: 10,
+    category: 'material',
+    imagePath: '/src/assets/pixel/items/crystal.png',
   },
+  // 治疗类
   {
-    id: 'spirit_water',
-    name: '水之星灵',
-    description: '水属性的星灵',
-    price: 300,
-    category: 'spirit',
-    icon: 'mdi-water',
-    color: 'blue',
-  },
-  {
-    id: 'spirit_wood',
-    name: '木之星灵',
-    description: '木属性的星灵',
-    price: 300,
-    category: 'spirit',
-    icon: 'mdi-leaf',
-    color: 'green',
-  },
-  // 道具类
-  {
-    id: 'item_focus_potion',
-    name: '专注药水',
-    description: '下次专注奖励 +50%',
+    id: 'potion_small',
+    name: '小型治疗药水',
+    description: '回复 30% HP',
     price: 50,
     category: 'item',
-    icon: 'mdi-flask',
-    color: 'blue',
+    imagePath: '/src/assets/pixel/items/potion_small.png',
   },
   {
-    id: 'item_evolution_stone',
-    name: '进化石',
-    description: '星灵经验 +1000',
+    id: 'potion_medium',
+    name: '中型治疗药水',
+    description: '回复 50% HP',
     price: 100,
     category: 'item',
-    icon: 'mdi-gem',
-    color: 'purple',
+    imagePath: '/src/assets/pixel/items/potion_medium.png',
   },
   {
-    id: 'item_protection',
-    name: '保护罩',
-    description: '对战失败不损失',
+    id: 'potion_large',
+    name: '大型治疗药水',
+    description: '回复 80% HP',
+    price: 200,
+    category: 'item',
+    imagePath: '/src/assets/pixel/items/potion_large.png',
+  },
+  // 状态解除类
+  {
+    id: 'antidote',
+    name: '解毒剂',
+    description: '解除中毒状态',
     price: 30,
     category: 'item',
-    icon: 'mdi-shield',
-    color: 'green',
+    imagePath: '/src/assets/pixel/items/antidote.png',
   },
   {
-    id: 'item_speed_boost',
-    name: '加速道具',
-    description: '专注时间缩短 25%',
+    id: 'awaken',
+    name: '清醒剂',
+    description: '解除麻痹/眩晕',
     price: 40,
     category: 'item',
-    icon: 'mdi-speedometer',
-    color: 'orange',
+    imagePath: '/src/assets/pixel/items/awaken.png',
   },
+  // 增益类
   {
-    id: 'item_luck_charm',
-    name: '幸运符',
-    description: '探索奖励 +25%',
-    price: 60,
+    id: 'attack_boost',
+    name: '攻击强化剂',
+    description: '攻击 +30%，3 回合',
+    price: 120,
     category: 'item',
-    icon: 'mdi-clover',
-    color: 'green',
-  },
-  // 皮肤类
-  {
-    id: 'skin_blue_theme',
-    name: '蓝色主题',
-    description: '界面蓝色主题',
-    price: 150,
-    category: 'skin',
-    icon: 'mdi-palette',
-    color: 'blue',
+    imagePath: '/src/assets/pixel/items/attack_boost.png',
   },
   {
-    id: 'skin_purple_theme',
-    name: '紫色主题',
-    description: '界面紫色主题',
-    price: 150,
-    category: 'skin',
-    icon: 'mdi-palette',
-    color: 'purple',
+    id: 'defense_boost',
+    name: '防御强化剂',
+    description: '防御 +30%，3 回合',
+    price: 120,
+    category: 'item',
+    imagePath: '/src/assets/pixel/items/defense_boost.png',
   },
   {
-    id: 'skin_dark_theme',
-    name: '暗黑主题',
-    description: '界面暗黑主题',
-    price: 200,
-    category: 'skin',
-    icon: 'mdi-moon-waning-crescent',
-    color: 'grey',
+    id: 'speed_boost',
+    name: '速度强化剂',
+    description: '速度 +30%，3 回合',
+    price: 120,
+    category: 'item',
+    imagePath: '/src/assets/pixel/items/speed_boost.png',
+  },
+  // 特殊类
+  {
+    id: 'revive',
+    name: '复活药',
+    description: '复活 +50% HP',
+    price: 1000,
+    category: 'item',
+    imagePath: '/src/assets/pixel/items/revive.png',
+  },
+  {
+    id: 'smoke_bomb',
+    name: '烟雾弹',
+    description: '100% 逃跑',
+    price: 50,
+    category: 'item',
+    imagePath: '/src/assets/pixel/items/smoke_bomb.png',
   },
 ]
 
@@ -277,6 +266,15 @@ const buyItem = (item: any) => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.item-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 .item-name {

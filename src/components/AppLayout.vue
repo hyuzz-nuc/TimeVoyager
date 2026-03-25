@@ -65,9 +65,7 @@ watch(
 
 // 导航
 const navigateTo = (path: string) => {
-  if (path !== route.path) {
-    router.push(path)
-  }
+  router.push(path)
 }
 </script>
 
@@ -79,9 +77,15 @@ const navigateTo = (path: string) => {
 }
 
 .bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   background: var(--bg-card);
   border-top: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
+  z-index: 1000;
 }
 
 :deep(.v-btn) {

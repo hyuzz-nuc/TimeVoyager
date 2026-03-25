@@ -147,6 +147,45 @@
         </div>
       </v-card-text>
     </v-card>
+    <!-- 图例 -->
+    <v-card class="legend-card" elevation="2">
+      <v-card-title class="card-title">
+        <v-icon icon="mdi-map-legend" class="mr-2" />
+        图例
+      </v-card-title>
+      <v-card-text>
+        <div class="legend-grid">
+          <div class="legend-item">
+            <img src="/src/assets/pixel/tiles/tile_base.png" alt="基地" class="legend-icon" />
+            <span>基地</span>
+          </div>
+          <div class="legend-item">
+            <img src="/src/assets/pixel/tiles/tile_shop.png" alt="商店" class="legend-icon" />
+            <span>商店</span>
+          </div>
+          <div class="legend-item">
+            <img src="/src/assets/pixel/tiles/tile_arena.png" alt="竞技场" class="legend-icon" />
+            <span>竞技场</span>
+          </div>
+          <div class="legend-item">
+            <img src="/src/assets/pixel/tiles/tile_nebula_purple.png" alt="星云" class="legend-icon" />
+            <span>星云</span>
+          </div>
+          <div class="legend-item">
+            <img src="/src/assets/pixel/tiles/tile_asteroid_small.png" alt="小行星" class="legend-icon" />
+            <span>小行星</span>
+          </div>
+          <div class="legend-item">
+            <img src="/src/assets/pixel/tiles/tile_planet_rocky.png" alt="行星" class="legend-icon" />
+            <span>行星</span>
+          </div>
+          <div class="legend-item">
+            <v-icon icon="mdi-lock" color="grey" size="20" />
+            <span>未解锁</span>
+          </div>
+        </div>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
