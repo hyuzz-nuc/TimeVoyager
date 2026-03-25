@@ -2,9 +2,9 @@
   <div class="shop-view">
     <div class="header safe-area-top">
       <h1 class="title">星能商店</h1>
-      <div class="currency-display" title="时光精粹">
-        <v-icon icon="mdi-gem" color="amber" size="24" />
-        <span class="currency-count">{{ authStore.essence }}</span>
+      <div class="crystal-display">
+        <img src="/src/assets/pixel/currency/crystal_amber.png" alt="晶体" class="crystal-icon" />
+        <span class="crystal-count">{{ authStore.crystals }}</span>
       </div>
     </div>
 
@@ -33,19 +33,19 @@
       >
         <v-card-text>
           <div class="item-icon">
-            <v-icon :icon="getItemIcon(item.id)" size="48" :color="getItemColor(item.category)" />
+            <img :src="item.imagePath" :alt="item.name" class="item-image" />
           </div>
           <div class="item-name">{{ item.name }}</div>
           <div class="item-desc">{{ item.description }}</div>
           <div class="item-price">
-            <v-icon icon="mdi-gem" color="amber" size="18" />
+            <img src="/src/assets/pixel/currency/crystal_amber.png" alt="晶体" class="price-icon" />
             <span class="price-value">{{ item.price }}</span>
           </div>
           <v-btn
             color="primary"
             size="small"
             block
-            :disabled="authStore.essence < item.price"
+            :disabled="authStore.crystals < item.price"
             @click="buyItem(item)"
           >
             购买
@@ -71,37 +71,31 @@ const categories = [
 ]
 
 const shopItems = [
-  // 材料�?- 用时光精粹购�?  {
-    id: 'material_crystal',
-    name: '星能晶体',
-    description: '高级货币，用于升�?进化星灵',
-    price: 50,
-    category: 'material',
-    imagePath: '/assets/pixel/currency/crystal_amber.png',
-  },
+  // 材料类
   {
     id: 'material_evolution_stone',
-    name: '进化�?,
-    description: '进化星灵必备材料',
-    price: 100,
+    name: '进化石',
+    description: '进化星灵必备',
+    price: 50,
     category: 'material',
-    imagePath: '/assets/pixel/items/evolution_stone.png',
+    imagePath: '/src/assets/pixel/items/evolution_stone.png',
   },
   {
-    id: 'material_energy_pack',
-    name: '体力药剂',
-    description: '恢复 50 点体�?,
-    price: 30,
+    id: 'material_crystal',
+    name: '星能晶体',
+    description: '通用货币',
+    price: 10,
     category: 'material',
-    imagePath: '/assets/pixel/items/energy_pack.png',
+    imagePath: '/src/assets/pixel/items/crystal.png',
   },
-  // 治疗�?  {
+  // 治疗类
+  {
     id: 'potion_small',
     name: '小型治疗药水',
     description: '回复 30% HP',
     price: 50,
     category: 'item',
-    imagePath: '/assets/pixel/items/potion_small.png',
+    imagePath: '/src/assets/pixel/items/potion_small.png',
   },
   {
     id: 'potion_medium',
@@ -109,7 +103,7 @@ const shopItems = [
     description: '回复 50% HP',
     price: 100,
     category: 'item',
-    imagePath: '/assets/pixel/items/potion_medium.png',
+    imagePath: '/src/assets/pixel/items/potion_medium.png',
   },
   {
     id: 'potion_large',
@@ -117,64 +111,66 @@ const shopItems = [
     description: '回复 80% HP',
     price: 200,
     category: 'item',
-    imagePath: '/assets/pixel/items/potion_large.png',
+    imagePath: '/src/assets/pixel/items/potion_large.png',
   },
   // 状态解除类
   {
     id: 'antidote',
-    name: '解毒�?,
-    description: '解除中毒状�?,
+    name: '解毒剂',
+    description: '解除中毒状态',
     price: 30,
     category: 'item',
-    imagePath: '/assets/pixel/items/antidote.png',
+    imagePath: '/src/assets/pixel/items/antidote.png',
   },
   {
     id: 'awaken',
-    name: '清醒�?,
+    name: '清醒剂',
     description: '解除麻痹/眩晕',
     price: 40,
     category: 'item',
-    imagePath: '/assets/pixel/items/awaken.png',
+    imagePath: '/src/assets/pixel/items/awaken.png',
   },
-  // 增益�?  {
+  // 增益类
+  {
     id: 'attack_boost',
-    name: '攻击强化�?,
-    description: '攻击 +30%�? 回合',
+    name: '攻击强化剂',
+    description: '攻击 +30%，3 回合',
     price: 120,
     category: 'item',
-    imagePath: '/assets/pixel/items/attack_boost.png',
+    imagePath: '/src/assets/pixel/items/attack_boost.png',
   },
   {
     id: 'defense_boost',
-    name: '防御强化�?,
-    description: '防御 +30%�? 回合',
+    name: '防御强化剂',
+    description: '防御 +30%，3 回合',
     price: 120,
     category: 'item',
-    imagePath: '/assets/pixel/items/defense_boost.png',
+    imagePath: '/src/assets/pixel/items/defense_boost.png',
   },
   {
     id: 'speed_boost',
-    name: '速度强化�?,
-    description: '速度 +30%�? 回合',
+    name: '速度强化剂',
+    description: '速度 +30%，3 回合',
     price: 120,
     category: 'item',
-    imagePath: '/assets/pixel/items/speed_boost.png',
+    imagePath: '/src/assets/pixel/items/speed_boost.png',
   },
-  // 特殊�?  {
+  // 特殊类
+  {
     id: 'revive',
-    name: '复活�?,
+    name: '复活药',
     description: '复活 +50% HP',
     price: 1000,
     category: 'item',
-    imagePath: '/assets/pixel/items/revive.png',
+    imagePath: '/src/assets/pixel/items/revive.png',
   },
   {
     id: 'smoke_bomb',
-    name: '烟雾�?,
+    name: '烟雾弹',
     description: '100% 逃跑',
     price: 50,
     category: 'item',
-    imagePath: '/assets/pixel/items/smoke_bomb.png',
+    imagePath: '/src/assets/pixel/items/smoke_bomb.png',
   },
 ]
 
@@ -185,45 +181,12 @@ const filteredItems = computed(() => {
   return shopItems.filter(item => item.category === currentCategory.value)
 })
 
-// 获取商品图标
-const getItemIcon = (itemId: string) => {
-  const iconMap: Record<string, string> = {
-    'material_crystal': 'mdi-gem',
-    'material_evolution_stone': 'mdi-star-circle',
-    'material_energy_pack': 'mdi-bolt',
-    'potion_small': 'mdi-flask',
-    'potion_medium': 'mdi-flask',
-    'potion_large': 'mdi-flask',
-    'antidote': 'mdi-syringe',
-    'awaken': 'mdi-lightning-bolt',
-    'attack_boost': 'mdi-sword',
-    'defense_boost': 'mdi-shield',
-    'speed_boost': 'mdi-run',
-    'smoke_bomb': 'mdi-smoke',
-  }
-  return iconMap[itemId] || 'mdi-package-variant'
-}
-
-// 获取商品颜色
-const getItemColor = (category: string) => {
-  const colorMap: Record<string, string> = {
-    'material': 'purple',
-    'item': 'blue',
-  }
-  return colorMap[category] || 'grey'
-}
-
 const buyItem = (item: any) => {
-  if (authStore.spendEssence(item.price)) {
-    // 购买成功，发放物�?    if (item.id === 'material_crystal') {
-      // 购买星能晶体
-      authStore.addCrystals(1)
-      alert(`购买成功�?{item.name} x1`)
-    } else {
-      // 其他物品（待实现背包系统�?      alert(`购买成功�?{item.name}\n（背包系统开发中）`)
-    }
+  if (authStore.spendCrystals(item.price)) {
+    alert(`购买成功：${item.name}`)
+    // TODO: 发放物品
   } else {
-    alert('时光精粹不足�?)
+    alert('晶体不足！')
   }
 }
 </script>
@@ -247,7 +210,7 @@ const buyItem = (item: any) => {
   margin: 0;
 }
 
-.currency-display {
+.crystal-display {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
@@ -258,7 +221,13 @@ const buyItem = (item: any) => {
   box-shadow: var(--shadow-sm);
 }
 
-.currency-count {
+.crystal-icon {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+}
+
+.crystal-count {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--accent);
@@ -342,4 +311,3 @@ const buyItem = (item: any) => {
   color: var(--accent);
 }
 </style>
-

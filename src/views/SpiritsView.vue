@@ -32,14 +32,14 @@
         @click="navigateToSpirit(spirit.id)"
       >
         <div class="spirit-icon">
-          <!-- 已解锁星�?-->
-          <v-icon
+          <!-- 已解锁星灵 -->
+          <img
             v-if="spiritStore.hasSpirit(spirit.id)"
-            :icon="getSpiritIcon(spirit.id, 'seed')"
-            :color="getSpiritColor(spirit.id)"
-            size="48"
+            :src="getSpiritImage(spirit.id, 'seed')"
+            :alt="spirit.name"
+            class="spirit-pixel-img"
           />
-          <!-- 未解锁星�?- 黑色剪影 -->
+          <!-- 未解锁星灵 - 黑色剪影 -->
           <div v-else class="spirit-silhouette">
             <v-icon icon="mdi-star-outline" color="grey-darken-2" size="40" />
             <div class="lock-icon">
@@ -50,7 +50,7 @@
         <div class="spirit-name">{{ spirit.name }}</div>
         <div class="spirit-element">{{ spirit.element }}</div>
         
-        <!-- 已解锁显示阶�?-->
+        <!-- 已解锁显示阶段 -->
         <div class="spirit-stages" v-if="spiritStore.hasSpirit(spirit.id)">
           <v-chip
             v-for="stage in ['seed', 'grow', 'mature', 'cosmic']"
@@ -63,7 +63,7 @@
             {{ stageLabel(stage) }}
           </v-chip>
           
-          <!-- 可进化提�?-->
+          <!-- 可进化提示 -->
           <v-chip
             v-if="canEvolveSpirit(spirit.id)"
             color="accent"
@@ -71,11 +71,11 @@
             variant="tonal"
             class="evolve-chip"
           >
-            �?进化
+            ⚡ 进化
           </v-chip>
         </div>
         
-        <!-- 未解锁显示解锁条�?-->
+        <!-- 未解锁显示解锁条件 -->
         <div class="unlock-condition" v-else>
           <span class="condition-text">???</span>
         </div>
@@ -157,7 +157,8 @@ const canEvolveSpirits = computed(() => {
   })
 })
 
-// 检查星灵是否可以进�?function canEvolveSpirit(spiritId: string): boolean {
+// 检查星灵是否可以进化
+function canEvolveSpirit(spiritId: string): boolean {
   const spirit = spiritStore.spirits.find(s => s.id === spiritId)
   if (!spirit) return false
   
@@ -178,73 +179,22 @@ function handleEvolve(spirit: Spirit) {
 // 初始星灵选择
 const showInitialSpiritDialog = ref(false)
 const selectedInitialSpirit = ref('')
-const initialSpiritOptions = ['fire', 'water', 'wood'] // �?�?木三选一
+const initialSpiritOptions = ['fire', 'water', 'wood'] // 火/水/木三选一
 
 // 阶段标签
 const stageLabel = (stage: string) => {
   const labels: Record<string, string> = {
-    seed: '�?,
-    grow: '�?,
-    mature: '�?,
-    cosmic: '�?,
+    seed: '种',
+    grow: '生',
+    mature: '成',
+    cosmic: '域',
   }
   return labels[stage] || stage
 }
 
-// 获取星灵图标（素材缺失时用图标代替）
-const getSpiritIcon = (spiritId: string, stage: string = 'seed') => {
-  const iconMap: Record<string, string> = {
-    'fire': 'mdi-fire',
-    'water': 'mdi-water',
-    'wood': 'mdi-leaf',
-    'earth': 'mdi-terrain',
-    'wind': 'mdi-weather-windy',
-    'light': 'mdi-white-balance-sunny',
-    'dark': 'mdi-weather-night',
-    'thunder': 'mdi-weather-lightning',
-    'ice': 'mdi-snowflake',
-    'metal': 'mdi-diamond',
-    'poison': 'mdi-skull-crossbones',
-    'psychic': 'mdi-brain',
-    'fighting': 'mdi-fist',
-    'flying': 'mdi-bird',
-    'bug': 'mdi-bug',
-    'rock': 'mdi-rock',
-    'ghost': 'mdi-ghost',
-    'dragon': 'mdi-dragon',
-    'steel': 'mdi-shield',
-    'fairy': 'mdi-star',
-    'normal': 'mdi-circle',
-  }
-  return iconMap[spiritId] || 'mdi-star'
-}
-
-// 获取星灵颜色
-const getSpiritColor = (spiritId: string) => {
-  const colorMap: Record<string, string> = {
-    'fire': 'red',
-    'water': 'blue',
-    'wood': 'green',
-    'earth': 'brown',
-    'wind': 'cyan',
-    'light': 'yellow',
-    'dark': 'purple',
-    'thunder': 'amber',
-    'ice': 'light-blue',
-    'metal': 'grey',
-    'poison': 'deep-purple',
-    'psychic': 'pink',
-    'fighting': 'orange',
-    'flying': 'indigo',
-    'bug': 'lime',
-    'rock': 'brown',
-    'ghost': 'purple',
-    'dragon': 'deep-purple',
-    'steel': 'blue-grey',
-    'fairy': 'pink',
-    'normal': 'grey',
-  }
-  return colorMap[spiritId] || 'grey'
+// 获取星灵图片路径
+const getSpiritImage = (spiritId: string, stage: string = 'seed') => {
+  return `/src/assets/pixel/spirits/spirit_${spiritId}_${stage}.png`
 }
 
 // 领取初始星灵
@@ -256,14 +206,16 @@ const claimInitialSpirit = () => {
   }
 }
 
-// 导航到星灵详�?const navigateToSpirit = (spiritId: string) => {
+// 导航到星灵详情
+const navigateToSpirit = (spiritId: string) => {
   if (!spiritStore.hasSpirit(spiritId)) {
     // 未解锁，显示提示
-    alert('这只星灵还未解锁，继续探索吧�?)
+    alert('这只星灵还未解锁，继续探索吧！')
     return
   }
   
-  // 默认跳转到已解锁的最高阶�?  const stages: string[] = ['cosmic', 'mature', 'grow', 'seed']
+  // 默认跳转到已解锁的最高阶段
+  const stages: string[] = ['cosmic', 'mature', 'grow', 'seed']
   let unlockedStage = 'seed'
   
   for (const stage of stages) {
@@ -420,7 +372,7 @@ onMounted(() => {
   font-weight: var(--font-weight-bold);
 }
 
-/* 初始星灵选择对话�?*/
+/* 初始星灵选择对话框 */
 .initial-spirits {
   display: flex;
   justify-content: center;
@@ -452,4 +404,3 @@ onMounted(() => {
   margin: 0 auto;
 }
 </style>
-
