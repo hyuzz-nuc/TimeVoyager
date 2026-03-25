@@ -2,9 +2,14 @@
   <div class="map-view">
     <div class="header safe-area-top">
       <h1 class="title">星域地图</h1>
-      <v-chip color="primary" size="small" variant="tonal">
-        探索度：{{ mapStore.explorationRate }}%
-      </v-chip>
+      <div class="stats-display">
+        <v-chip color="primary" size="small" variant="tonal" class="mr-1">
+          Lv.{{ authStore.level }}
+        </v-chip>
+        <v-chip color="accent" size="small" variant="tonal">
+          ⚡ {{ energyStore.currentEnergy }}/{{ energyStore.MAX_ENERGY }}
+        </v-chip>
+      </div>
     </div>
 
     <!-- 地图网格 -->
@@ -83,17 +88,21 @@
     </v-card>
 
     <!-- 探索奖励弹窗 -->
-    <v-dialog v-model="showRewardDialog" max-width="300" persistent>
+    <v-dialog v-model="showRewardDialog" max-width="350" persistent>
       <v-card>
         <v-card-title class="text-center">
           <v-icon icon="mdi-gift" color="accent" size="48" class="mb-2" />
           <div class="text-h6">探索奖励!</div>
         </v-card-title>
         <v-card-text class="text-center">
-          <p>发现星能晶体</p>
+          <p class="mb-2">发现宝藏！</p>
           <div class="reward-amount">
-            <img src="/src/assets/pixel/currency/crystal_amber.png" alt="晶体" class="reward-icon" />
-            <span>+{{ rewardAmount }}</span>
+            <img src="/src/assets/pixel/currency/crystal_amber.png" alt="时光精粹" class="reward-icon" />
+            <span class="essence-reward">+{{ rewardAmount }} 时光精粹</span>
+          </div>
+          <div class="reward-amount mt-2">
+            <img src="/src/assets/pixel/currency/crystal_amber.png" alt="星能晶体" class="reward-icon" style="filter: hue-rotate(45deg);" />
+            <span class="crystal-reward">+{{ Math.floor(rewardAmount / 3) }} 星能晶体</span>
           </div>
         </v-card-text>
         <v-card-actions class="justify-center">
@@ -148,9 +157,15 @@
 import { ref, computed, onMounted } from 'vue'
 import { useMapStore, type MapTile } from '@/stores/map'
 import { useAuthStore } from '@/stores/auth'
+import { useEnergyStore } from '@/stores/energy'
 
 const mapStore = useMapStore()
 const authStore = useAuthStore()
+const energyStore = useEnergyStore()
+
+// 探索消耗配置
+const EXPLORE_ENERGY_COST = 10  // 每次探索消耗体力
+const EXPLORE_BASE_LEVEL = 1    // 基础探索等级要求
 
 // 当前格子
 const currentTile = computed(() => {
@@ -276,6 +291,17 @@ const handleTileClick = (tile: MapTile) => {
   if (!tile.unlocked) {
     // 未解锁
     if (isAdj) {
+      // 检查体力和等级
+      if (energyStore.currentEnergy < EXPLORE_ENERGY_COST) {
+        alert(`体力不足！\n需要：${EXPLORE_ENERGY_COST} 点\n当前：${energyStore.currentEnergy} 点\n\n体力每 5 分钟恢复 1 点`)
+        return
+      }
+      
+      if (authStore.level < EXPLORE_BASE_LEVEL) {
+        alert(`等级不足！\n需要：Lv.${EXPLORE_BASE_LEVEL}\n当前：Lv.${authStore.level}`)
+        return
+      }
+      
       // 相邻，直接探索解锁
       exploreAndUnlock(tile)
     } else {
@@ -297,12 +323,17 @@ const handleTileClick = (tile: MapTile) => {
     }
   } else {
     // 不相邻，仅显示信息（不移动）
-    // 可以通过长按或者其他方式查看远处格子信息
   }
 }
 
 // 探索并解锁格子
 const exploreAndUnlock = (tile: MapTile) => {
+  // 消耗体力
+  energyStore.consumeEnergy(EXPLORE_ENERGY_COST)
+  
+  // 增加经验值
+  authStore.addExp(10)
+  
   tile.unlocked = true
   mapStore.exploredCount++
   mapStore.saveMap()
@@ -320,9 +351,15 @@ const exploreTile = (tile?: MapTile) => {
   
   const success = mapStore.exploreCurrentTile()
   if (success && current.hasReward) {
-    // 显示奖励
-    rewardAmount.value = Math.floor(Math.random() * 10) + 5
-    authStore.addCrystals(rewardAmount.value)
+    // 随机奖励：时光精粹 + 星能晶体
+    const essenceReward = Math.floor(Math.random() * 10) + 5  // 5-15 时光精粹
+    const crystalReward = Math.floor(Math.random() * 3) + 1   // 1-3 星能晶体
+    
+    authStore.addEssence(essenceReward)
+    authStore.addCrystals(crystalReward)
+    authStore.addExp(5)  // 探索经验
+    
+    rewardAmount.value = essenceReward
     showRewardDialog.value = true
     current.hasReward = false
     mapStore.saveMap()

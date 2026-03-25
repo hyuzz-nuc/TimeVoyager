@@ -2,9 +2,9 @@
   <div class="shop-view">
     <div class="header safe-area-top">
       <h1 class="title">星能商店</h1>
-      <div class="crystal-display">
-        <img src="/src/assets/pixel/currency/crystal_amber.png" alt="晶体" class="crystal-icon" />
-        <span class="crystal-count">{{ authStore.crystals }}</span>
+      <div class="currency-display">
+        <img src="/src/assets/pixel/currency/crystal_amber.png" alt="时光精粹" class="currency-icon" />
+        <span class="currency-count">{{ authStore.essence }}</span>
       </div>
     </div>
 
@@ -71,22 +71,30 @@ const categories = [
 ]
 
 const shopItems = [
-  // 材料类
+  // 材料类 - 用时光精粹购买
+  {
+    id: 'material_crystal',
+    name: '星能晶体',
+    description: '高级货币，用于升级/进化星灵',
+    price: 50,
+    category: 'material',
+    imagePath: '/src/assets/pixel/currency/crystal_amber.png',
+  },
   {
     id: 'material_evolution_stone',
     name: '进化石',
-    description: '进化星灵必备',
-    price: 50,
+    description: '进化星灵必备材料',
+    price: 100,
     category: 'material',
     imagePath: '/src/assets/pixel/items/evolution_stone.png',
   },
   {
-    id: 'material_crystal',
-    name: '星能晶体',
-    description: '通用货币',
-    price: 10,
+    id: 'material_energy_pack',
+    name: '体力药剂',
+    description: '恢复 50 点体力',
+    price: 30,
     category: 'material',
-    imagePath: '/src/assets/pixel/items/crystal.png',
+    imagePath: '/src/assets/pixel/items/energy_pack.png',
   },
   // 治疗类
   {
@@ -182,11 +190,18 @@ const filteredItems = computed(() => {
 })
 
 const buyItem = (item: any) => {
-  if (authStore.spendCrystals(item.price)) {
-    alert(`购买成功：${item.name}`)
-    // TODO: 发放物品
+  if (authStore.spendEssence(item.price)) {
+    // 购买成功，发放物品
+    if (item.id === 'material_crystal') {
+      // 购买星能晶体
+      authStore.addCrystals(1)
+      alert(`购买成功：${item.name} x1`)
+    } else {
+      // 其他物品（待实现背包系统）
+      alert(`购买成功：${item.name}\n（背包系统开发中）`)
+    }
   } else {
-    alert('晶体不足！')
+    alert('时光精粹不足！')
   }
 }
 </script>

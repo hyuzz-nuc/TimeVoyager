@@ -12,8 +12,10 @@ export const useAuthStore = defineStore('auth', () => {
     id: '',
     nickname: '时光旅行者',
     level: 1,
-    crystals: 0,
-    coins: 0,
+    essence: 0,      // 时光精粹（免费货币）
+    crystals: 0,     // 星能晶体（高级货币）
+    coins: 0,        // 金币（基础货币）
+    exp: 0,          // 当前经验值
     createdAt: 0,
   })
   
@@ -28,7 +30,10 @@ export const useAuthStore = defineStore('auth', () => {
   const userId = computed(() => user.value.id)
   const nickname = computed(() => user.value.nickname)
   const level = computed(() => user.value.level)
-  const crystals = computed(() => user.value.crystals)
+  const essence = computed(() => user.value.essence)      // 时光精粹
+  const crystals = computed(() => user.value.crystals)    // 星能晶体
+  const coins = computed(() => user.value.coins)          // 金币
+  const exp = computed(() => user.value.exp)              // 经验值
   const hasCompletedGuide = computed(() => newbieGuide.value.shown && newbieGuide.value.step >= 999)
   const userState = computed(() => ({
     hasCompletedGuide: hasCompletedGuide.value,
@@ -54,8 +59,10 @@ export const useAuthStore = defineStore('auth', () => {
       id: generateUserId(),
       nickname: '时光旅行者',
       level: 1,
-      crystals: 100, // 初始赠送 100 晶体
+      essence: 100,  // 初始赠送 100 时光精粹
+      crystals: 0,
       coins: 0,
+      exp: 0,
       createdAt: Date.now(),
     }
     newbieGuide.value = {
@@ -84,6 +91,22 @@ export const useAuthStore = defineStore('auth', () => {
     saveUser()
   }
   
+  // 时光精粹（免费货币）
+  function addEssence(amount: number) {
+    user.value.essence += amount
+    saveUser()
+  }
+  
+  function spendEssence(amount: number): boolean {
+    if (user.value.essence >= amount) {
+      user.value.essence -= amount
+      saveUser()
+      return true
+    }
+    return false
+  }
+  
+  // 星能晶体（高级货币）
   function addCrystals(amount: number) {
     user.value.crystals += amount
     saveUser()
@@ -98,6 +121,7 @@ export const useAuthStore = defineStore('auth', () => {
     return false
   }
   
+  // 金币（基础货币）
   function addCoins(amount: number) {
     user.value.coins += amount
     saveUser()
@@ -110,6 +134,20 @@ export const useAuthStore = defineStore('auth', () => {
       return true
     }
     return false
+  }
+  
+  // 经验值
+  function addExp(amount: number) {
+    user.value.exp += amount
+    // 检查升级
+    const expNeeded = user.value.level * 100
+    if (user.value.exp >= expNeeded) {
+      user.value.level++
+      user.value.exp -= expNeeded
+      // 升级奖励
+      user.value.essence += 50
+    }
+    saveUser()
   }
   
   // 新手引导
@@ -157,17 +195,23 @@ export const useAuthStore = defineStore('auth', () => {
     userId,
     nickname,
     level,
-    crystals,
+    essence,      // 时光精粹
+    crystals,     // 星能晶体
+    coins,        // 金币
+    exp,          // 经验值
     
     // Actions
     initUser,
     createUser,
     saveUser,
     updateNickname,
-    addCrystals,
-    spendCrystals,
-    addCoins,
-    spendCoins,
+    addEssence,   // 添加时光精粹
+    spendEssence, // 消耗时光精粹
+    addCrystals,  // 添加星能晶体
+    spendCrystals,// 消耗星能晶体
+    addCoins,     // 添加金币
+    spendCoins,   // 消耗金币
+    addExp,       // 添加经验值
     showNewbieGuide,
     completeNewbieGuide,
     nextGuideStep,
