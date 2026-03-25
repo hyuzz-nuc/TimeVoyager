@@ -6,9 +6,9 @@
         <h1 class="title">早安，{{ authStore.nickname }}</h1>
         <p class="subtitle">专注即探索，时间换世界</p>
       </div>
-      <div class="crystal-display">
-        <img src="/src/assets/pixel/currency/crystal_amber.png" alt="晶体" class="crystal-icon" />
-        <span class="crystal-count">{{ authStore.crystals }}</span>
+      <div class="essence-display" title="时光精粹">
+        <v-icon icon="mdi-gem" color="amber" size="24" />
+        <span class="essence-count">{{ authStore.essence }}</span>
       </div>
     </div>
 
@@ -49,9 +49,9 @@
       <v-card-text>
         <div class="stats-grid">
           <div class="stat-item">
-            <img src="/src/assets/pixel/currency/crystal_amber.png" alt="晶体" class="stat-icon" />
-            <div class="stat-value">{{ authStore.crystals }}</div>
-            <div class="stat-label">星能晶体</div>
+            <v-icon icon="mdi-gem" color="amber" size="32" />
+            <div class="stat-value">{{ authStore.essence }}</div>
+            <div class="stat-label">时光精粹</div>
           </div>
           <div class="stat-divider" />
           <div class="stat-item">
@@ -191,7 +191,7 @@ spiritStore.loadSpirits()
   margin: 0;
 }
 
-.crystal-display {
+.essence-display {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
@@ -202,13 +202,7 @@ spiritStore.loadSpirits()
   box-shadow: var(--shadow-sm);
 }
 
-.crystal-icon {
-  width: 24px;
-  height: 24px;
-  image-rendering: pixelated;
-}
-
-.crystal-count {
+.essence-count {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--accent);

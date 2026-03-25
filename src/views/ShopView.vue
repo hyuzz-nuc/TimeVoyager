@@ -2,8 +2,8 @@
   <div class="shop-view">
     <div class="header safe-area-top">
       <h1 class="title">星能商店</h1>
-      <div class="currency-display">
-        <img src="/src/assets/pixel/currency/crystal_amber.png" alt="时光精粹" class="currency-icon" />
+      <div class="currency-display" title="时光精粹">
+        <v-icon icon="mdi-gem" color="amber" size="24" />
         <span class="currency-count">{{ authStore.essence }}</span>
       </div>
     </div>
@@ -33,19 +33,19 @@
       >
         <v-card-text>
           <div class="item-icon">
-            <img :src="item.imagePath" :alt="item.name" class="item-image" />
+            <v-icon :icon="getItemIcon(item.id)" size="48" :color="getItemColor(item.category)" />
           </div>
           <div class="item-name">{{ item.name }}</div>
           <div class="item-desc">{{ item.description }}</div>
           <div class="item-price">
-            <img src="/src/assets/pixel/currency/crystal_amber.png" alt="晶体" class="price-icon" />
+            <v-icon icon="mdi-gem" color="amber" size="18" />
             <span class="price-value">{{ item.price }}</span>
           </div>
           <v-btn
             color="primary"
             size="small"
             block
-            :disabled="authStore.crystals < item.price"
+            :disabled="authStore.essence < item.price"
             @click="buyItem(item)"
           >
             购买
@@ -189,6 +189,34 @@ const filteredItems = computed(() => {
   return shopItems.filter(item => item.category === currentCategory.value)
 })
 
+// 获取商品图标
+const getItemIcon = (itemId: string) => {
+  const iconMap: Record<string, string> = {
+    'material_crystal': 'mdi-gem',
+    'material_evolution_stone': 'mdi-star-circle',
+    'material_energy_pack': 'mdi-bolt',
+    'potion_small': 'mdi-flask',
+    'potion_medium': 'mdi-flask',
+    'potion_large': 'mdi-flask',
+    'antidote': 'mdi-syringe',
+    'awaken': 'mdi-lightning-bolt',
+    'attack_boost': 'mdi-sword',
+    'defense_boost': 'mdi-shield',
+    'speed_boost': 'mdi-run',
+    'smoke_bomb': 'mdi-smoke',
+  }
+  return iconMap[itemId] || 'mdi-package-variant'
+}
+
+// 获取商品颜色
+const getItemColor = (category: string) => {
+  const colorMap: Record<string, string> = {
+    'material': 'purple',
+    'item': 'blue',
+  }
+  return colorMap[category] || 'grey'
+}
+
 const buyItem = (item: any) => {
   if (authStore.spendEssence(item.price)) {
     // 购买成功，发放物品
@@ -225,7 +253,7 @@ const buyItem = (item: any) => {
   margin: 0;
 }
 
-.crystal-display {
+.currency-display {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
@@ -236,13 +264,7 @@ const buyItem = (item: any) => {
   box-shadow: var(--shadow-sm);
 }
 
-.crystal-icon {
-  width: 24px;
-  height: 24px;
-  image-rendering: pixelated;
-}
-
-.crystal-count {
+.currency-count {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--accent);

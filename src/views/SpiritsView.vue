@@ -33,11 +33,11 @@
       >
         <div class="spirit-icon">
           <!-- 已解锁星灵 -->
-          <img
+          <v-icon
             v-if="spiritStore.hasSpirit(spirit.id)"
-            :src="getSpiritImage(spirit.id, 'seed')"
-            :alt="spirit.name"
-            class="spirit-pixel-img"
+            :icon="getSpiritIcon(spirit.id, 'seed')"
+            :color="getSpiritColor(spirit.id)"
+            size="48"
           />
           <!-- 未解锁星灵 - 黑色剪影 -->
           <div v-else class="spirit-silhouette">
@@ -192,9 +192,60 @@ const stageLabel = (stage: string) => {
   return labels[stage] || stage
 }
 
-// 获取星灵图片路径
-const getSpiritImage = (spiritId: string, stage: string = 'seed') => {
-  return `/src/assets/pixel/spirits/spirit_${spiritId}_${stage}.png`
+// 获取星灵图标（素材缺失时用图标代替）
+const getSpiritIcon = (spiritId: string, stage: string = 'seed') => {
+  const iconMap: Record<string, string> = {
+    'fire': 'mdi-fire',
+    'water': 'mdi-water',
+    'wood': 'mdi-leaf',
+    'earth': 'mdi-terrain',
+    'wind': 'mdi-weather-windy',
+    'light': 'mdi-white-balance-sunny',
+    'dark': 'mdi-weather-night',
+    'thunder': 'mdi-weather-lightning',
+    'ice': 'mdi-snowflake',
+    'metal': 'mdi-diamond',
+    'poison': 'mdi-skull-crossbones',
+    'psychic': 'mdi-brain',
+    'fighting': 'mdi-fist',
+    'flying': 'mdi-bird',
+    'bug': 'mdi-bug',
+    'rock': 'mdi-rock',
+    'ghost': 'mdi-ghost',
+    'dragon': 'mdi-dragon',
+    'steel': 'mdi-shield',
+    'fairy': 'mdi-star',
+    'normal': 'mdi-circle',
+  }
+  return iconMap[spiritId] || 'mdi-star'
+}
+
+// 获取星灵颜色
+const getSpiritColor = (spiritId: string) => {
+  const colorMap: Record<string, string> = {
+    'fire': 'red',
+    'water': 'blue',
+    'wood': 'green',
+    'earth': 'brown',
+    'wind': 'cyan',
+    'light': 'yellow',
+    'dark': 'purple',
+    'thunder': 'amber',
+    'ice': 'light-blue',
+    'metal': 'grey',
+    'poison': 'deep-purple',
+    'psychic': 'pink',
+    'fighting': 'orange',
+    'flying': 'indigo',
+    'bug': 'lime',
+    'rock': 'brown',
+    'ghost': 'purple',
+    'dragon': 'deep-purple',
+    'steel': 'blue-grey',
+    'fairy': 'pink',
+    'normal': 'grey',
+  }
+  return colorMap[spiritId] || 'grey'
 }
 
 // 领取初始星灵
