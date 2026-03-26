@@ -56,27 +56,35 @@ export const useSpiritStore = defineStore('spirits', () => {
     legendFragment: 5,      // 初始赠送 5 个传说碎片
   })
   
-  // 星灵图鉴数据（19 种基础星灵）
+  // 星灵图鉴数据（19 种星灵，8 元素体系）
   const spiritTypes = ref([
-    { id: 'base_blue', name: '基础星灵', element: '水' },
+    // 🔥 火系 (3)
     { id: 'fire', name: '火焰星灵', element: '火' },
+    { id: 'star', name: '恒星星灵', element: '火' },
+    { id: 'meteor', name: '流星星灵', element: '火' },
+    // 💧 水系 (3)
     { id: 'water', name: '流水星灵', element: '水' },
+    { id: 'moon', name: '月球星灵', element: '水' },
+    { id: 'aurora', name: '极球星灵', element: '水' },
+    // 🌿 木系 (2)
     { id: 'wood', name: '自然星灵', element: '木' },
+    { id: 'nebula', name: '星云星灵', element: '木' },
+    // ⚡ 雷系 (3)
     { id: 'thunder', name: '雷霆星灵', element: '雷' },
+    { id: 'comet', name: '彗星星灵', element: '雷' },
+    { id: 'focus', name: '专注星灵', element: '雷' },
+    // 🌑 暗系 (2)
     { id: 'dark', name: '暗影星灵', element: '暗' },
+    { id: 'blackhole', name: '黑洞星灵', element: '暗' },
+    // ✨ 光系 (2)
     { id: 'light', name: '光辉星灵', element: '光' },
-    { id: 'star', name: '恒星星灵', element: '星' },
-    { id: 'moon', name: '月球星灵', element: '星' },
-    { id: 'comet', name: '彗星星灵', element: '星' },
-    { id: 'meteor', name: '流星星灵', element: '星' },
-    { id: 'nebula', name: '星云星灵', element: '星' },
-    { id: 'galaxy', name: '星系星灵', element: '星' },
-    { id: 'blackhole', name: '黑洞星灵', element: '星' },
-    { id: 'aurora', name: '极球星灵', element: '星' },
-    { id: 'cosmos', name: '宇宙星灵', element: '星' },
-    { id: 'time', name: '时间星灵', element: '时' },
-    { id: 'focus', name: '专注星灵', element: '时' },
-    { id: 'energy', name: '能量星灵', element: '能' },
+    { id: 'energy', name: '能量星灵', element: '光' },
+    // 🕳️ 空系 (4)
+    { id: 'galaxy', name: '星系星灵', element: '空' },
+    { id: 'cosmos', name: '宇宙星灵', element: '空' },
+    { id: 'time', name: '时间星灵', element: '空' },
+    // 💫 能系 (3)
+    { id: 'base_blue', name: '基础星灵', element: '能' },
   ])
   
   // Getters
