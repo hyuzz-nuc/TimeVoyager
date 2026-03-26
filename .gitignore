@@ -48,6 +48,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-*.md
-*.png
-*.py
+# Personal notes (root level only)
+/*.md
+
+# Keep generated assets but ignore scripts/memory
+/scripts/*.py
+/memory/*.md
+
+# DO NOT ignore PNG assets - they are needed for the game
+# *.png - REMOVED to allow asset upload
